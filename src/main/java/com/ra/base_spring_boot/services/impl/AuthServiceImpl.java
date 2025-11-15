@@ -7,13 +7,13 @@ import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.model.Role;
 import com.ra.base_spring_boot.model.User;
 import com.ra.base_spring_boot.model.constants.RoleName;
+import com.ra.base_spring_boot.model.constants.UserStatus;
 import com.ra.base_spring_boot.repository.IUserRepository;
 import com.ra.base_spring_boot.security.jwt.JwtProvider;
 import com.ra.base_spring_boot.security.principle.MyUserDetails;
 import com.ra.base_spring_boot.services.IAuthService;
 import com.ra.base_spring_boot.services.IRoleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -42,10 +42,12 @@ public class AuthServiceImpl implements IAuthService
         Set<Role> roles = new HashSet<>();
         roles.add(roleService.findByRoleName(RoleName.ROLE_USER));
         User user = User.builder()
-                .fullName(formRegister.getFullName())
-                .username(formRegister.getUsername())
+                .firstName(formRegister.getFirstName())
+                .lastName(formRegister.getLastName())
+                .email(formRegister.getEmail())
                 .password(passwordEncoder.encode(formRegister.getPassword()))
-                .status(true)
+                .phone(formRegister.getPhone())
+                .status(UserStatus.ACTIVE)
                 .roles(roles)
                 .build();
         userRepository.save(user);
@@ -57,7 +59,7 @@ public class AuthServiceImpl implements IAuthService
         Authentication authentication;
         try
         {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(formLogin.getUsername(), formLogin.getPassword()));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(formLogin.getEmail(), formLogin.getPassword()));
         }
         catch (AuthenticationException e)
         {
@@ -65,7 +67,7 @@ public class AuthServiceImpl implements IAuthService
         }
 
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
-        if (!userDetails.getUser().getStatus())
+        if (userDetails.getUser().getStatus() == UserStatus.BLOCKED)
         {
             throw new HttpBadRequest("your account is blocked");
         }
