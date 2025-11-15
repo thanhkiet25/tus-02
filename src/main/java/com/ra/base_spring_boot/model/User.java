@@ -18,16 +18,21 @@ import java.util.Set;
 @Table(name = "users")
 public class User extends BaseObject
 {
-    @Column(name = "full_name", nullable = false, length = 200)
-    private String fullName;
-    @Column(name = "phone_number", length = 11)
-    private String phoneNumber;
-    @Column(name = "email", nullable = false)
+    @Column(name = "first_name", nullable = false, length = 100)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 100)
+    private String lastName;
+
+    @Column(nullable = false, unique = true, length = 255)
     private String email;
 
     @JsonIgnore
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
+
+    @Column(name = "phone", length = 11)
+    private String phone;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -40,4 +45,10 @@ public class User extends BaseObject
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<BusReview> reviews = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Payment> payments = new HashSet<>();
 }
