@@ -41,6 +41,6 @@ public class Station extends BaseObject {
             joinColumns = @JoinColumn(name = "station_id"),
             inverseJoinColumns = @JoinColumn(name = "bus_id")
     )
-    private Set<Bus> busses = new HashSet<>();
+    private Set<Bus> buses = new HashSet<>();
 
 }
