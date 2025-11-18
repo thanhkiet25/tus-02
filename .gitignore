@@ -38,3 +38,5 @@ out/
 
 # macOS system files
 .DS_Store
+# Spring boot dev config
+/src/main/resources/application-dev.yml
