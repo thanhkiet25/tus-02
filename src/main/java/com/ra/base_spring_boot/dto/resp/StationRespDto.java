@@ -20,7 +20,6 @@ public class StationRespDto {
 
     private String wallpaper;
 
-
     private String descriptions;
 
     private String location;
