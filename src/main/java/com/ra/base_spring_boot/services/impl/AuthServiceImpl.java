@@ -3,7 +3,9 @@ package com.ra.base_spring_boot.services.impl;
 import com.ra.base_spring_boot.dto.req.FormLogin;
 import com.ra.base_spring_boot.dto.req.FormRegister;
 import com.ra.base_spring_boot.dto.resp.JwtResponse;
+import com.ra.base_spring_boot.dto.resp.UserResponseDTO;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
+import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.model.Role;
 import com.ra.base_spring_boot.model.User;
 import com.ra.base_spring_boot.model.constants.RoleName;
@@ -14,6 +16,7 @@ import com.ra.base_spring_boot.security.principle.MyUserDetails;
 import com.ra.base_spring_boot.services.IAuthService;
 import com.ra.base_spring_boot.services.IRoleService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,8 +40,12 @@ public class AuthServiceImpl implements IAuthService
     private final JwtProvider jwtProvider;
 
     @Override
-    public void register(FormRegister formRegister)
+    public UserResponseDTO register(FormRegister formRegister)
     {
+        if(userRepository.existsByEmail(formRegister.getEmail())){
+            throw new HttpConflict("This email is already in use.");
+        }
+
         Set<Role> roles = new HashSet<>();
         roles.add(roleService.findByRoleName(RoleName.ROLE_USER));
         User user = User.builder()
@@ -50,7 +57,8 @@ public class AuthServiceImpl implements IAuthService
                 .status(UserStatus.ACTIVE)
                 .roles(roles)
                 .build();
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return new UserResponseDTO(savedUser);
     }
 
     @Override
@@ -63,23 +71,18 @@ public class AuthServiceImpl implements IAuthService
         }
         catch (AuthenticationException e)
         {
-            throw new HttpBadRequest("Username or password is incorrect");
+            throw new HttpBadRequest("Email or password is incorrect");
         }
 
         MyUserDetails userDetails = (MyUserDetails) authentication.getPrincipal();
         if (userDetails.getUser().getStatus() == UserStatus.BLOCKED)
         {
-            throw new HttpBadRequest("your account is blocked");
+            throw new HttpBadRequest("Your account is blocked");
         }
-
-
-
-
 
         return JwtResponse.builder()
                 .accessToken(jwtProvider.generateToken(userDetails.getUsername()))
-                .user(userDetails.getUser())
-                .roles(userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()))
+                .user(new UserResponseDTO(userDetails.getUser()))
                 .build();
     }
 

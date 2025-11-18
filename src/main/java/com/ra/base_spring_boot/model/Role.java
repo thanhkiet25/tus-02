@@ -2,10 +2,7 @@ package com.ra.base_spring_boot.model;
 
 import com.ra.base_spring_boot.model.base.BaseObject;
 import com.ra.base_spring_boot.model.constants.RoleName;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -18,5 +15,6 @@ import lombok.*;
 public class Role extends BaseObject
 {
     @Enumerated(EnumType.STRING)
+    @Column(name = "role_name", nullable = false)
     private RoleName roleName;
 }

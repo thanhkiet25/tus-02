@@ -18,7 +18,6 @@ public class JwtResponse
 {
     private String accessToken;
     private final String type = "Bearer";
-    @JsonIgnoreProperties({"roles","password"})
-    private User user;
-    private Set<String> roles;
+    @JsonIgnoreProperties({"password"})
+    private UserResponseDTO user;
 }
