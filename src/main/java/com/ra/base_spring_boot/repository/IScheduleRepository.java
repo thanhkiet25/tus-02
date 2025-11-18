@@ -24,7 +24,7 @@ join r.arrivalStation arr
 where (:fromId is null or ds.id = :fromId)
 and   (:toId is null or arr.id = :toId)
 and   (:date is null or date(s.departureTime)= :date)
-order by s.departureTime asc 
+order by s.departureTime asc
 """)
     List<SearchScheduleDTO> searchSchedule(
             @Param("fromId") Long fromId,
