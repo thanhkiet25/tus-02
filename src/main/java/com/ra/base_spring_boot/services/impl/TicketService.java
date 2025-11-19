@@ -20,6 +20,7 @@ public class TicketService {
                 .arrivalTime(ticket.getArrivalTime())
                 .price(ticket.getPrice())
                 .status(ticket.getStatus())
+                .seatType(ticket.getSeatType())
                 .build();
     }
 

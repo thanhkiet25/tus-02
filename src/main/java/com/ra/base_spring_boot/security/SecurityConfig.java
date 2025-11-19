@@ -58,6 +58,12 @@ public class SecurityConfig
                                         RoleName.ROLE_USER.toString(),
                                         RoleName.ROLE_ADMIN.toString()
                                 )
+                                .requestMatchers(
+                                        "/api/v1/auth/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html"
+                                ).permitAll()
                                 .anyRequest().permitAll()
                 )
                 .authenticationProvider(authenticationProvider())
