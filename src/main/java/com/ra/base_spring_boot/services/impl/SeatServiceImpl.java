@@ -19,6 +19,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -48,7 +50,7 @@ public class SeatServiceImpl implements ISeatService {
         seat.setPriceForSeatType(seatRequest.getPriceForSeatType());
         Bus bus = busRepository.findById(seatRequest.getBusId()).orElseThrow(() -> new HttpNotFound("Not found bus id is" + seatRequest.getBusId()));
         seat.setBus(bus);
-        seat.setCreatedAt(seatRequest.getCreatedAt());
+        seat.setCreatedAt(LocalDateTime.now());
         seat.setUpdatedAt(seatRequest.getUpdatedAt());
         Seat newSeat = seatRepository.save(seat);
         return new SeatResponse(newSeat);
@@ -61,7 +63,7 @@ public class SeatServiceImpl implements ISeatService {
            seat.setStatus(SeatStatus.BOOKED);
            seatRepository.save(seat);
        }else {
-           throw new HttpConflict("seat status is" + seat.getStatus());
+           throw new HttpConflict("seat status is " + seat.getStatus());
        }
     }
 }
