@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @Builder
-public class BannerDTO {
+public class BannerResponse {
     private Integer id;
     private String bannerUrl;
     private String position;

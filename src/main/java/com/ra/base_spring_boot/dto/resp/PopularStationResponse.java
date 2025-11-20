@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class PopularBusCompanyDTO {
-    private Integer bus_company_id;
-    private String bus_company_name;
+public class PopularStationResponse {
+    private Integer stationId;
+    private String stationName;
     private Long totalTickets;
 }

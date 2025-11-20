@@ -1,7 +1,6 @@
 package com.ra.base_spring_boot.dto.resp;
 
 import com.ra.base_spring_boot.model.Station;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class StationRespDto {
+public class StationResponse {
     private int id;
 
     private String name;
@@ -28,7 +27,7 @@ public class StationRespDto {
 
     private String arrivalRoutes;
 
-    public StationRespDto(Station station){
+    public StationResponse(Station station){
         this.id = station.getId();
         this.name = station.getName();
         this.image = station.getImage();

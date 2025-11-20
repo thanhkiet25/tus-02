@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class StationDataResp {
-    private int id;
-    private String StationName;
+public class PopularBusCompanyResponse {
+    private Integer bus_company_id;
+    private String bus_company_name;
+    private Long totalTickets;
 }
