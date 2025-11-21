@@ -2,7 +2,6 @@ package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
-import com.ra.base_spring_boot.dto.resp.BusCompanyListResponse;
 import com.ra.base_spring_boot.dto.resp.PageResponse;
 import com.ra.base_spring_boot.services.impl.BusCompanyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class BusCompanyController {
             @RequestParam(defaultValue = "5") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        PageResponse<BusCompanyListResponse> result = busCompanyService.getCompanyNames(pageable);
+        PageResponse<BusCompanyResponse> result = busCompanyService.getCompanyNames(pageable);
         ResponseWrapper<?> response = ResponseWrapper
                 .builder()
                 .status(HttpStatus.OK)

@@ -27,5 +27,6 @@ public class BusCompany extends BaseObject {
     private String descriptions;
 
     @OneToMany(mappedBy = "busCompany")
+    @Builder.Default
     private Set<Bus> buses = new HashSet<>();
 }

@@ -27,13 +27,16 @@ public class StationServiceImpl implements IStationService {
 
     @Override
     public Page<StationListResponse> findAllAndSearch(Pageable pageable, String search) {
-        Page<Station> listStation =stationRepository.findAllAndSearch(search, pageable);
+        Page<Station> listStation = stationRepository.findAllAndSearch(search, pageable);
         return listStation.map(e -> StationListResponse.builder()
                 .id(e.getId())
+                .stationName(e.getName())
                 .stationName(e.getName())
                 .location(e.getLocation())
                 .image(e.getImage())
                 .build());
+
+
     }
 
     @Override
@@ -99,37 +102,39 @@ public class StationServiceImpl implements IStationService {
             station.setLocation(request.getLocation());
         }
 
-        if (request.getDescriptions() != null) {
-            station.setDescriptions(request.getDescriptions());
-        }
+
+            if (request.getDescriptions() != null) {
+        station.setDescriptions(request.getDescriptions());
+    }
 
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
-            String imageUrl = cloudinaryService.upload(request.getImageFile());
-            station.setImage(imageUrl);
-        }
+        String imageUrl = cloudinaryService.upload(request.getImageFile());
+        station.setImage(imageUrl);
+    }
 
         if (request.getWallpaperFile() != null && !request.getWallpaperFile().isEmpty()) {
-            String wallpaperUrl = cloudinaryService.upload(request.getWallpaperFile());
-            station.setWallpaper(wallpaperUrl);
-        }
-
-        Station updatedStation = stationRepository.save(station);
-        return new StationResponse(updatedStation);
+        String wallpaperUrl = cloudinaryService.upload(request.getWallpaperFile());
+        station.setWallpaper(wallpaperUrl);
     }
+
+    Station updatedStation = stationRepository.save(station);
+        return new StationResponse(updatedStation);
+ }
 
     @Override
     public StationResponse deleteStation(Integer id) {
-        Station station = stationRepository.findById(id)
-                .orElseThrow(() -> new HttpNotFound("Station not found with id: " + id));
+       Station station = stationRepository.findById(id)
+            .orElseThrow(() -> new HttpNotFound("Station not found with id: " + id));
 
-        if (stationRepository.hasRelatedRoutes(id)) {
-            throw new HttpConflict("Cannot delete station because it is used in existing routes. Please remove related routes first.");
-        }
+      if (stationRepository.hasRelatedRoutes(id)) {
+        throw new HttpConflict("Cannot delete station because it is used in existing routes. Please remove related routes first.");
+      }
 
-        StationResponse response = new StationResponse(station);
+      StationResponse response = new StationResponse(station);
 
-        stationRepository.delete(station);
-        return response;
+      stationRepository.delete(station);
+      return response;
     }
 }
+
 

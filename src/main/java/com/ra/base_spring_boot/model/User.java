@@ -44,11 +44,14 @@ public class User extends BaseObject
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private Set<BusReview> reviews = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private Set<Payment> payments = new HashSet<>();
 }

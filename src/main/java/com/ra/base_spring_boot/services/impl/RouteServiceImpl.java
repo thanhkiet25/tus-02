@@ -1,7 +1,6 @@
 package com.ra.base_spring_boot.services.impl;
-
-import com.ra.base_spring_boot.dto.resp.RouteListResponse;
-import com.ra.base_spring_boot.dto.resp.PopularRouteResponse;
+import com.ra.base_spring_boot.dto.resp.ListRouteResponse;
+import com.ra.base_spring_boot.dto.resp.PopularRoutesResponse;
 import com.ra.base_spring_boot.dto.resp.RouteResponse;
 import com.ra.base_spring_boot.model.Route;
 import com.ra.base_spring_boot.repository.IRouteRepository;
@@ -19,9 +18,9 @@ import java.util.List;
 public class RouteServiceImpl implements IRouteService {
     private final IRouteRepository routeRepository;
 
-    @Override
-    public Page<RouteListResponse> getAllRoute(Pageable pageable) {
-        return routeRepository.findAll(pageable).map(RouteListResponse::new);
+    public Page<ListRouteResponse> getAllRoute(Pageable pageable) {
+        return routeRepository.findAll(pageable).map(ListRouteResponse::new);
+
     }
 
     @Override
@@ -31,7 +30,7 @@ public class RouteServiceImpl implements IRouteService {
     }
 
     @Override
-    public List<PopularRouteResponse> getPopularRoutes(int limit) {
+    public List<PopularRoutesResponse> getPopularRoutes(int limit) {
         return routeRepository.getPopularRouter(PageRequest.of(0, limit));
     }
 

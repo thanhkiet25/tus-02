@@ -1,7 +1,6 @@
 package com.ra.base_spring_boot.controller;
-
 import com.ra.base_spring_boot.dto.ResponseWrapper;
-import com.ra.base_spring_boot.dto.resp.RouteListResponse;
+import com.ra.base_spring_boot.dto.resp.ListRouteResponse;
 import com.ra.base_spring_boot.dto.resp.RouteResponse;
 import com.ra.base_spring_boot.services.IRouteService;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +23,8 @@ public class RouteController {
     private final IRouteService routeService;
 
     @GetMapping
-    public ResponseEntity<?> getAllRoute(@PageableDefault(page = 0, size = 10,direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<RouteListResponse> listRouteResp = routeService.getAllRoute(pageable);
+    public ResponseEntity<?> getAllRoute(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+        Page<ListRouteResponse> listRouteResp = routeService.getAllRoute(pageable);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
                         .code(HttpStatus.OK.value())

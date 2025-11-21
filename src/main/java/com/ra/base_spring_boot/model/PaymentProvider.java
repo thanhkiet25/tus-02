@@ -27,5 +27,6 @@ public class PaymentProvider extends BaseObject {
     private String apiEndpoint;
 
     @OneToMany(mappedBy = "paymentProvider")
+    @Builder.Default
     private Set<Payment> payments = new HashSet<>();
 }

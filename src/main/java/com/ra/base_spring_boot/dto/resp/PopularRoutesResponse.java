@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @Builder
-public class PopularRouteResponse {
+public class PopularRoutesResponse {
     private Integer routeId;
     private String departureStation;
     private String arrivalStation;

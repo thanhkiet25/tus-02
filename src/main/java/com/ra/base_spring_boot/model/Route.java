@@ -31,8 +31,10 @@ public class Route extends BaseObject {
     private Station arrivalStation;
 
     @OneToMany(mappedBy = "route")
+    @Builder.Default
     private Set<Schedule> schedules = new HashSet<>();
 
     @OneToMany(mappedBy = "route")
+    @Builder.Default
     private Set<CancellationPolicy> cancellationPolicies = new HashSet<>();
 }
