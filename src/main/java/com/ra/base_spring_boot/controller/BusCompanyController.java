@@ -1,8 +1,8 @@
 package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
-import com.ra.base_spring_boot.dto.resp.BusCompanyDetailResponse;
 import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
+import com.ra.base_spring_boot.dto.resp.BusCompanyListResponse;
 import com.ra.base_spring_boot.dto.resp.PageResponse;
 import com.ra.base_spring_boot.services.impl.BusCompanyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class BusCompanyController {
             @RequestParam(defaultValue = "5") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        PageResponse<BusCompanyResponse> result = busCompanyService.getCompanyNames(pageable);
+        PageResponse<BusCompanyListResponse> result = busCompanyService.getCompanyNames(pageable);
         ResponseWrapper<?> response = ResponseWrapper
                 .builder()
                 .status(HttpStatus.OK)
@@ -37,7 +37,7 @@ public class BusCompanyController {
     @GetMapping("/companies/{id}")
     public ResponseEntity<ResponseWrapper<?>> getCompanyById(@PathVariable int id){
         try{
-            BusCompanyDetailResponse response = busCompanyService.getCompanyById(id);
+            BusCompanyResponse response = busCompanyService.getCompanyById(id);
             return ResponseEntity.ok(
                     ResponseWrapper.builder()
                             .status(HttpStatus.OK)

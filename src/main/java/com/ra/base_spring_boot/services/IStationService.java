@@ -1,6 +1,8 @@
 package com.ra.base_spring_boot.services;
 
 
+import com.ra.base_spring_boot.dto.req.StationCreateRequest;
+import com.ra.base_spring_boot.dto.req.StationUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.StationListResponse;
 import com.ra.base_spring_boot.dto.resp.StationResponse;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,12 @@ public interface IStationService {
     StationResponse findStationById(int id);
 
     List<PopularStationResponse> getPopularStations(int limit);
+
+    StationResponse createStation(StationCreateRequest request);
+
+    StationResponse updateStation(Integer id, StationUpdateRequest request);
+
+    StationResponse deleteStation(Integer id);
 }
 
 

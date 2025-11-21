@@ -6,26 +6,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
 public class StationResponse {
-    private int id;
-
+    private Integer id;
     private String name;
-
     private String image;
-
     private String wallpaper;
-
     private String descriptions;
-
     private String location;
-
-    private String departureRoutes;
-
-    private String arrivalRoutes;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public StationResponse(Station station){
         this.id = station.getId();
@@ -34,8 +29,8 @@ public class StationResponse {
         this.wallpaper = station.getWallpaper();
         this.descriptions = station.getDescriptions();
         this.location = station.getLocation();
-        this.arrivalRoutes = station.getArrivalRoutes().toString();
-        this.departureRoutes = station.getDepartureRoutes().toString();
+        this.createdAt = station.getCreatedAt();
+        this.updatedAt = station.getUpdatedAt();
     }
 
 }

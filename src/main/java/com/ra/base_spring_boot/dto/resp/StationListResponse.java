@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class StationListResponse {
-    private int id;
-    private String StationName;
+    private Integer id;
+    private String stationName;
+    private String location;
+    private String image;
 }
+

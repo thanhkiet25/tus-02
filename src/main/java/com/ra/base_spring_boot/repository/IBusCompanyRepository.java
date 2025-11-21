@@ -24,6 +24,4 @@ order by count(t.id) desc
 """)
     List<PopularBusCompanyResponse> getPopularBusCompany(Pageable pageable);
 
-
-
 }

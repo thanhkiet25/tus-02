@@ -15,8 +15,8 @@ import java.util.Set;
 @Setter
 @Builder
 @Table(name = "stations")
-public class Station extends BaseObject {
-    @Column(nullable = false)
+public class    Station extends BaseObject {
+    @Column(nullable = false, unique = true)
     private String name;
 
     private String image;
@@ -26,13 +26,15 @@ public class Station extends BaseObject {
     @Column(columnDefinition = "longtext")
     private String descriptions;
 
-    @Column
+    @Column(nullable = false)
     private String location;
 
     @OneToMany(mappedBy = "departureStation")
+    @Builder.Default
     private Set<Route> departureRoutes = new HashSet<>();
 
     @OneToMany(mappedBy = "arrivalStation")
+    @Builder.Default
     private Set<Route> arrivalRoutes = new HashSet<>();
 
     @ManyToMany
@@ -41,6 +43,7 @@ public class Station extends BaseObject {
             joinColumns = @JoinColumn(name = "station_id"),
             inverseJoinColumns = @JoinColumn(name = "bus_id")
     )
+    @Builder.Default
     private Set<Bus> buses = new HashSet<>();
 
 }
