@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/adminBusCompany")
+@RequestMapping("/api/v1/admin/bus-companies")
 public class AdminBusCompanyController {
     private final IBusCompanyService busCompanyService;
 
@@ -23,7 +23,7 @@ public class AdminBusCompanyController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "companyName") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction
+            @RequestParam(defaultValue = "desc") String direction
             ){
        Page<BusCompanyResponse> busCompany = busCompanyService.findBusCompanyByNameAndGetAllAndSort(search,page,size,sortBy,direction);
 

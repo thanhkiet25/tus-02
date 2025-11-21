@@ -6,7 +6,6 @@ import com.ra.base_spring_boot.converter.BusCompanyConverter;
 import com.ra.base_spring_boot.dto.req.BusCompanyRequest;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
-import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.BusCompany;
 import com.ra.base_spring_boot.repository.IBusCompanyRepository;
 import com.ra.base_spring_boot.services.IBusCompanyService;
@@ -70,16 +69,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
                  busCompanyRepository.findAll(pageable)    :
                  busCompanyRepository.findByCompanyNameContainingIgnoreCase(search, pageable);
 
-
-         return companyPage.map(c ->
-                 BusCompanyResponse.builder()
-                         .id(c.getId())
-                         .companyName(c.getCompanyName())
-                         .image(c.getImage())
-                         .descriptions(c.getDescriptions())
-                         .build()
-           );
-
+         return companyPage.map(busCompanyConverter::toBusCompanyResponse);
     }
 
     @Override
@@ -104,26 +94,17 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
       if(busCompanyRepository.existsByCompanyNameAndIdNot(busCompanyRequest.getCompanyName(),id)){
           throw new HttpBadRequest("CompanyName already exists");
       }
-      try{
           BusCompany existingCompany = busCompanyRepository.findBusCompanyById(id);
           existingCompany.setCompanyName(busCompanyRequest.getCompanyName());
           existingCompany.setImage(busCompanyRequest.getCompanyImage());
           existingCompany.setDescriptions(busCompanyRequest.getDescription());
           return busCompanyRepository.save(existingCompany);
-      }catch (HttpNotFound httpNotFound){
-          throw new HttpNotFound("CompanyName not found");
-
-     }
-
     }
+
     @Override
     public void deleteBusCompany(int id) {
-        try{
             BusCompany existingCompany = busCompanyRepository.findBusCompanyById(id);
             busCompanyRepository.delete(existingCompany);
-        }catch (HttpNotFound httpNotFound){
-            throw new HttpNotFound("CompanyName not found");
-        }
     }
 
 }
