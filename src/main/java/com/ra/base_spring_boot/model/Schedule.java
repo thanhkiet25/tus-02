@@ -41,5 +41,6 @@ public class Schedule extends BaseObject {
     private Bus bus;
 
     @OneToMany(mappedBy = "schedule")
+    @Builder.Default
     private Set<Ticket> tickets = new HashSet<>();
 }

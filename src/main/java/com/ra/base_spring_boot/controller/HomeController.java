@@ -27,7 +27,7 @@ public class HomeController {
     private final IScheduleService scheduleService;
     @GetMapping("/popularRouter")
     public ResponseEntity<?> getPopularRoutes(@RequestParam(defaultValue = "5") int limit) {
-        List<PopularRouteResponse> routes = routeService.getPopularRoutes(limit);
+        List<PopularRoutesResponse> routes = routeService.getPopularRoutes(limit);
         return  ResponseEntity.ok().body(
                 ResponseWrapper.builder()
                         .status(HttpStatus.OK)
@@ -89,7 +89,7 @@ public class HomeController {
              @RequestParam(required = false)
              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
              LocalDate date ){
-                List<ScheduleResponse> searchSchedule = scheduleService.searchSchedule(fromId, toId, date);
+                List<SearchScheduleResponse> searchSchedule = scheduleService.searchSchedule(fromId, toId, date);
                 return  ResponseEntity.ok().body(
                         ResponseWrapper.builder()
                         .status(HttpStatus.OK)

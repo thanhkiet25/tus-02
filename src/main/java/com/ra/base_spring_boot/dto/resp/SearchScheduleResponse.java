@@ -5,14 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-
-public class BusCompanyListResponse {
-    private int id;
-    private String companyName;
-
-
+public class SearchScheduleResponse {
+private Integer scheduleId;
+private String descriptionStation;
+private String arrivalStation;
+private LocalDateTime departureTime;
 }

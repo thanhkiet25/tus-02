@@ -30,17 +30,22 @@ public class Bus extends BaseObject {
     private BusCompany busCompany;
 
     @ManyToMany(mappedBy = "buses")
+    @Builder.Default
     private Set<Station> stations = new HashSet<>();
 
     @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private Set<BusImage> images = new HashSet<>();
 
     @OneToMany(mappedBy = "bus")
+    @Builder.Default
     private Set<Schedule> schedules = new HashSet<>();
 
     @OneToMany(mappedBy = "bus")
+    @Builder.Default
     private Set<Seat> seats = new HashSet<>();
 
     @OneToMany(mappedBy = "bus")
+    @Builder.Default
     private Set<BusReview> reviews = new HashSet<>();
 }

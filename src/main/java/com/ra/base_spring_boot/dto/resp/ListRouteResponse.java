@@ -8,7 +8,9 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class RouteListResponse {
+
+public class ListRouteResponse {
+
     private int id;
 
     private Double price;
@@ -21,7 +23,7 @@ public class RouteListResponse {
 
     private String arrivalStation;
 
-    public RouteListResponse(Route route) {
+    public ListRouteResponse(Route route) {
         this.id = route.getId();
         this.price = route.getPrice();
         this.duration = route.getDuration();

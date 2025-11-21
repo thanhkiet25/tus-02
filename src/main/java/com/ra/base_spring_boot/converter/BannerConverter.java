@@ -3,7 +3,6 @@ package com.ra.base_spring_boot.converter;
 import com.ra.base_spring_boot.dto.resp.BannerResponse;
 import com.ra.base_spring_boot.model.Banner;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component

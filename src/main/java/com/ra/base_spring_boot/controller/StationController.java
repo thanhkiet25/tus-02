@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stations")
 public class StationController {
-
     private final IStationService stationService;
 
     @GetMapping

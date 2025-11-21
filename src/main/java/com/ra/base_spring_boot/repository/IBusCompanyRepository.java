@@ -2,6 +2,7 @@ package com.ra.base_spring_boot.repository;
 
 import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
 import com.ra.base_spring_boot.model.BusCompany;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,11 @@ order by count(t.id) desc
 """)
     List<PopularBusCompanyResponse> getPopularBusCompany(Pageable pageable);
 
+    Page<BusCompany> findByCompanyNameContainingIgnoreCase(String search, Pageable pageable);
+
+    boolean existsByCompanyName(String search);
+
+    boolean existsByCompanyNameAndIdNot(String search,Integer id);
+
+    BusCompany findBusCompanyById(Integer id);
 }

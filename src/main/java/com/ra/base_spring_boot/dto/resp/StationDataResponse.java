@@ -5,15 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class ScheduleResponse {
-private Integer scheduleId;
-private String descriptionStation;
-private String arrivalStation;
-private LocalDateTime departureTime;
+public class StationDataResponse {
+    private int id;
+    private String companyName;
 }
