@@ -2,7 +2,6 @@ package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.resp.*;
-import com.ra.base_spring_boot.model.Banner;
 import com.ra.base_spring_boot.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,7 +27,7 @@ public class HomeController {
     private final IScheduleService scheduleService;
     @GetMapping("/popularRouter")
     public ResponseEntity<?> getPopularRoutes(@RequestParam(defaultValue = "5") int limit) {
-        List<PopularRoutesDTO> routes = routeService.getPopularRoutes(limit);
+        List<PopularRouteResponse> routes = routeService.getPopularRoutes(limit);
         return  ResponseEntity.ok().body(
                 ResponseWrapper.builder()
                         .status(HttpStatus.OK)
@@ -39,7 +38,7 @@ public class HomeController {
 
     @GetMapping("/banners")
     public ResponseEntity<?> getBanners() {
-        List<BannerDTO> banners = bannerService.findAllBanner();
+        List<BannerResponse> banners = bannerService.findAllBanner();
         return  ResponseEntity.ok().body(
                 ResponseWrapper.builder()
                 .status(HttpStatus.OK)
@@ -50,7 +49,7 @@ public class HomeController {
     }
     @GetMapping("/popularBusCompany")
     public ResponseEntity<?> getPopularBusCompany(@RequestParam(defaultValue = "5") int limit) {
-        List<PopularBusCompanyDTO> popularBusCompany = busCompanyService.getPopularBusCompanyDTO(limit);
+        List<PopularBusCompanyResponse> popularBusCompany = busCompanyService.getPopularBusCompanyDTO(limit);
         return  ResponseEntity.ok().body(
                 ResponseWrapper.builder()
                 .status(HttpStatus.OK)
@@ -61,7 +60,7 @@ public class HomeController {
     }
     @GetMapping("/popularBusReview")
     public ResponseEntity<?> getPopularBusReview(@RequestParam(defaultValue = "5") int limit) {
-        List<PopularBusReviewDTO> popularBusReview = busReviewService.getBusReviews(limit);
+        List<PopularBusReviewResponse> popularBusReview = busReviewService.getBusReviews(limit);
         return  ResponseEntity.ok().body(
                 ResponseWrapper.builder()
                 .status(HttpStatus.OK)
@@ -73,7 +72,7 @@ public class HomeController {
 
     @GetMapping("/popularStation")
     public ResponseEntity<?> getPopularStation(@RequestParam(defaultValue = "5") int limit) {
-        List<PopularStationDTO> popularStation = stationService.getPopularStations(limit);
+        List<PopularStationResponse> popularStation = stationService.getPopularStations(limit);
         return  ResponseEntity.ok().body(
                 ResponseWrapper.builder()
                 .status(HttpStatus.OK)
@@ -90,7 +89,7 @@ public class HomeController {
              @RequestParam(required = false)
              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
              LocalDate date ){
-                List<SearchScheduleDTO> searchSchedule = scheduleService.searchSchedule(fromId, toId, date);
+                List<ScheduleResponse> searchSchedule = scheduleService.searchSchedule(fromId, toId, date);
                 return  ResponseEntity.ok().body(
                         ResponseWrapper.builder()
                         .status(HttpStatus.OK)

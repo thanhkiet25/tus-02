@@ -1,12 +1,13 @@
 package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
-import com.ra.base_spring_boot.dto.resp.ListRouteResp;
-import com.ra.base_spring_boot.dto.resp.RouteRespDto;
+import com.ra.base_spring_boot.dto.resp.RouteListResponse;
+import com.ra.base_spring_boot.dto.resp.RouteResponse;
 import com.ra.base_spring_boot.services.IRouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class RouteController {
     private final IRouteService routeService;
 
     @GetMapping
-    public ResponseEntity<?> getAllRoute(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        Page<ListRouteResp> listRouteResp = routeService.getAllRoute(pageable);
+    public ResponseEntity<?> getAllRoute(@PageableDefault(page = 0, size = 10,direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<RouteListResponse> listRouteResp = routeService.getAllRoute(pageable);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
                         .code(HttpStatus.OK.value())
@@ -36,7 +37,7 @@ public class RouteController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getRouteById(@PathVariable Integer id) {
-        RouteRespDto route = routeService.findById(id);
+        RouteResponse route = routeService.findById(id);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
                         .code(HttpStatus.OK.value())

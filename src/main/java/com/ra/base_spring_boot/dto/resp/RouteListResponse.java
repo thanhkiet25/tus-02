@@ -3,14 +3,12 @@ package com.ra.base_spring_boot.dto.resp;
 import com.ra.base_spring_boot.model.Route;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class RouteRespDto {
+public class RouteListResponse {
     private int id;
 
     private Double price;
@@ -23,20 +21,13 @@ public class RouteRespDto {
 
     private String arrivalStation;
 
-    private LocalDateTime createdAt;
-
-    private  LocalDateTime updatedAt;
-
-
-    public RouteRespDto(Route route) {
+    public RouteListResponse(Route route) {
+        this.id = route.getId();
         this.price = route.getPrice();
         this.duration = route.getDuration();
         this.distance = route.getDistance();
         this.departureStation = route.getDepartureStation().getName();
         this.arrivalStation = route.getArrivalStation().getName();
-        this.createdAt = route.getCreatedAt();
-        this.updatedAt = route.getUpdatedAt();
 
     }
-
 }

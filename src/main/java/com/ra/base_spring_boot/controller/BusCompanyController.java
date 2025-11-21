@@ -4,9 +4,8 @@ import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.resp.BusCompanyDetailResponse;
 import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
 import com.ra.base_spring_boot.dto.resp.PageResponse;
-import com.ra.base_spring_boot.services.impl.BusCompanyService;
+import com.ra.base_spring_boot.services.impl.BusCompanyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class BusCompanyController {
     @Autowired
-    private BusCompanyService busCompanyService;
+    private BusCompanyServiceImpl busCompanyService;
 
     @GetMapping("/companies")
     public ResponseEntity<ResponseWrapper<?>> getCompanies(

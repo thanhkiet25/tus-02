@@ -1,9 +1,9 @@
 package com.ra.base_spring_boot.services;
 
-import com.ra.base_spring_boot.dto.resp.PopularBusReviewDTO;
+import com.ra.base_spring_boot.dto.resp.PopularBusReviewResponse;
 
 import java.util.List;
 
 public interface IBusReviewService {
-    List<PopularBusReviewDTO>  getBusReviews(int limit);
+    List<PopularBusReviewResponse>  getBusReviews(int limit);
 }

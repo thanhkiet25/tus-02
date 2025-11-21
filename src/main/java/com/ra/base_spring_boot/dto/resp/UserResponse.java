@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Data
 @Builder
-public class UserResponseDTO {
+public class UserResponse {
     private Integer id;
     private String firstName;
     private String lastName;
@@ -27,7 +27,7 @@ public class UserResponseDTO {
     private LocalDateTime updatedAt;
 
 
-    public UserResponseDTO(User user) {
+    public UserResponse(User user) {
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
