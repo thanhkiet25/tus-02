@@ -3,8 +3,7 @@ package com.ra.base_spring_boot.controller;
 import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.req.FormLogin;
 import com.ra.base_spring_boot.dto.req.FormRegister;
-import com.ra.base_spring_boot.dto.resp.UserResponseDTO;
-import com.ra.base_spring_boot.model.User;
+import com.ra.base_spring_boot.dto.resp.UserResponse;
 import com.ra.base_spring_boot.services.IAuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +43,7 @@ public class AuthController
     @PostMapping("/register")
     public ResponseEntity<?> handleRegister(@Valid @RequestBody FormRegister formRegister)
     {
-        UserResponseDTO newUser = authService.register(formRegister);
+        UserResponse newUser = authService.register(formRegister);
         return ResponseEntity.created(URI.create("api/v1/auth/register")).body(
                 ResponseWrapper.builder()
                         .status(HttpStatus.CREATED)

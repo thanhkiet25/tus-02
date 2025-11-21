@@ -1,10 +1,8 @@
 package com.ra.base_spring_boot.services.impl;
 
-import com.ra.base_spring_boot.dto.resp.BannerDTO;
-import com.ra.base_spring_boot.dto.resp.ListRouteResp;
-import com.ra.base_spring_boot.dto.resp.PopularRoutesDTO;
-import com.ra.base_spring_boot.dto.resp.RouteRespDto;
-import com.ra.base_spring_boot.model.Banner;
+import com.ra.base_spring_boot.dto.resp.RouteListResponse;
+import com.ra.base_spring_boot.dto.resp.PopularRouteResponse;
+import com.ra.base_spring_boot.dto.resp.RouteResponse;
 import com.ra.base_spring_boot.model.Route;
 import com.ra.base_spring_boot.repository.IRouteRepository;
 import com.ra.base_spring_boot.services.IRouteService;
@@ -22,18 +20,18 @@ public class RouteServiceImpl implements IRouteService {
     private final IRouteRepository routeRepository;
 
     @Override
-    public Page<ListRouteResp> getAllRoute(Pageable pageable) {
-        return routeRepository.findAll(pageable).map(ListRouteResp::new);
+    public Page<RouteListResponse> getAllRoute(Pageable pageable) {
+        return routeRepository.findAll(pageable).map(RouteListResponse::new);
     }
 
     @Override
-    public RouteRespDto findById(int id) {
+    public RouteResponse findById(int id) {
         Route route = routeRepository.findById(id);
-        return new RouteRespDto(route);
+        return new RouteResponse(route);
     }
 
     @Override
-    public List<PopularRoutesDTO> getPopularRoutes(int limit) {
+    public List<PopularRouteResponse> getPopularRoutes(int limit) {
         return routeRepository.getPopularRouter(PageRequest.of(0, limit));
     }
 

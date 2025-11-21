@@ -1,6 +1,6 @@
 package com.ra.base_spring_boot.repository;
 
-import com.ra.base_spring_boot.dto.resp.SearchScheduleDTO;
+import com.ra.base_spring_boot.dto.resp.ScheduleResponse;
 import com.ra.base_spring_boot.model.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IScheduleRepository extends JpaRepository<Schedule,Integer> {
     @Query("""
-select new com.ra.base_spring_boot.dto.resp.SearchScheduleDTO(
+select new com.ra.base_spring_boot.dto.resp.ScheduleResponse(
   s.id,
   ds.name,
   arr.name,
@@ -26,7 +26,7 @@ and   (:toId is null or arr.id = :toId)
 and   (:date is null or date(s.departureTime)= :date)
 order by s.departureTime asc
 """)
-    List<SearchScheduleDTO> searchSchedule(
+    List<ScheduleResponse> searchSchedule(
             @Param("fromId") Long fromId,
             @Param("toId") Long toId,
             @Param("date") LocalDate date

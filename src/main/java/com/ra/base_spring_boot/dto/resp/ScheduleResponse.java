@@ -1,6 +1,5 @@
 package com.ra.base_spring_boot.dto.resp;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Builder
-public class SearchScheduleDTO {
+public class ScheduleResponse {
 private Integer scheduleId;
 private String descriptionStation;
 private String arrivalStation;

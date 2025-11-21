@@ -3,7 +3,7 @@ package com.ra.base_spring_boot.services.impl;
 import com.ra.base_spring_boot.dto.req.FormLogin;
 import com.ra.base_spring_boot.dto.req.FormRegister;
 import com.ra.base_spring_boot.dto.resp.JwtResponse;
-import com.ra.base_spring_boot.dto.resp.UserResponseDTO;
+import com.ra.base_spring_boot.dto.resp.UserResponse;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.model.Role;
@@ -21,13 +21,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +38,7 @@ public class AuthServiceImpl implements IAuthService
     private final JwtProvider jwtProvider;
 
     @Override
-    public UserResponseDTO register(FormRegister formRegister)
+    public UserResponse register(FormRegister formRegister)
     {
         if(userRepository.existsByEmail(formRegister.getEmail())){
             throw new HttpConflict("This email is already in use.");
@@ -58,7 +56,7 @@ public class AuthServiceImpl implements IAuthService
                 .roles(roles)
                 .build();
         User savedUser = userRepository.save(user);
-        return new UserResponseDTO(savedUser);
+        return new UserResponse(savedUser);
     }
 
     @Override
@@ -82,7 +80,7 @@ public class AuthServiceImpl implements IAuthService
 
         return JwtResponse.builder()
                 .accessToken(jwtProvider.generateToken(userDetails.getUsername()))
-                .user(new UserResponseDTO(userDetails.getUser()))
+                .user(new UserResponse(userDetails.getUser()))
                 .build();
     }
 

@@ -1,18 +1,18 @@
 package com.ra.base_spring_boot.services;
 
-import com.ra.base_spring_boot.dto.resp.ListRouteResp;
-import com.ra.base_spring_boot.dto.resp.PopularRoutesDTO;
-import com.ra.base_spring_boot.dto.resp.RouteRespDto;
+import com.ra.base_spring_boot.dto.resp.RouteListResponse;
+import com.ra.base_spring_boot.dto.resp.PopularRouteResponse;
+import com.ra.base_spring_boot.dto.resp.RouteResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IRouteService {
- Page<ListRouteResp> getAllRoute(Pageable pageable);
+ Page<RouteListResponse> getAllRoute(Pageable pageable);
 
- RouteRespDto findById(int id);
+ RouteResponse findById(int id);
 
- List<PopularRoutesDTO> getPopularRoutes(int limit);
+ List<PopularRouteResponse> getPopularRoutes(int limit);
 
 }

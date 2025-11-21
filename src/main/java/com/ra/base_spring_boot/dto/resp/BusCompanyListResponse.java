@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class BusCompanyDetailResponse {
+public class BusCompanyListResponse {
     private int id;
     private String companyName;
-    private String image;
-    private String descriptions;
 
 
 }

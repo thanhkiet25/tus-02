@@ -1,21 +1,28 @@
 package com.ra.base_spring_boot.services;
 
 
-import com.ra.base_spring_boot.dto.resp.StationDataResp;
-import com.ra.base_spring_boot.dto.resp.StationRespDto;
-import com.ra.base_spring_boot.model.Station;
+import com.ra.base_spring_boot.dto.req.StationCreateRequest;
+import com.ra.base_spring_boot.dto.req.StationUpdateRequest;
+import com.ra.base_spring_boot.dto.resp.StationListResponse;
+import com.ra.base_spring_boot.dto.resp.StationResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.ra.base_spring_boot.dto.resp.PopularStationDTO;
+import com.ra.base_spring_boot.dto.resp.PopularStationResponse;
 
 import java.util.List;
 
 public interface IStationService {
-    Page<StationDataResp> findAllAndSearch(Pageable pageable , String search);
+    Page<StationListResponse> findAllAndSearch(Pageable pageable , String search);
 
-    StationRespDto findStationById(int id);
+    StationResponse findStationById(int id);
 
-    List<PopularStationDTO> getPopularStations(int limit);
+    List<PopularStationResponse> getPopularStations(int limit);
+
+    StationResponse createStation(StationCreateRequest request);
+
+    StationResponse updateStation(Integer id, StationUpdateRequest request);
+
+    StationResponse deleteStation(Integer id);
 }
 
 

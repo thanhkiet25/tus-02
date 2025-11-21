@@ -1,6 +1,6 @@
 package com.ra.base_spring_boot.repository;
 
-import com.ra.base_spring_boot.dto.resp.PopularBusCompanyDTO;
+import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
 import com.ra.base_spring_boot.model.BusCompany;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IBusCompanyRepository extends JpaRepository<BusCompany,Integer> {
     @Query("""
-select new com.ra.base_spring_boot.dto.resp.PopularBusCompanyDTO(
+select new com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse(
   bc.id,
   bc.companyName,
   count(t.id)
@@ -22,6 +22,6 @@ join b.busCompany bc
 group by bc.id,bc.companyName
 order by count(t.id) desc
 """)
-    List<PopularBusCompanyDTO> getPopularBusCompany(Pageable pageable);
+    List<PopularBusCompanyResponse> getPopularBusCompany(Pageable pageable);
 
 }

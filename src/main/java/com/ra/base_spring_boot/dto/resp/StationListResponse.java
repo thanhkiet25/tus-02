@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class PopularStationDTO {
-    private Integer stationId;
+public class StationListResponse {
+    private Integer id;
     private String stationName;
-    private Long totalTickets;
+    private String location;
+    private String image;
 }

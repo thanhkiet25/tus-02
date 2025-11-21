@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface TicketRepository extends JpaRepository<Ticket,Integer> {
+public interface ITicketRepository extends JpaRepository<Ticket,Integer> {
     @Query("""
     SELECT t FROM Ticket t 
     JOIN t.payment p 

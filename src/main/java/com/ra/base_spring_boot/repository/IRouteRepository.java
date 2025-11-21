@@ -1,7 +1,6 @@
 package com.ra.base_spring_boot.repository;
 
-import com.ra.base_spring_boot.dto.resp.PopularRoutesDTO;
-import com.ra.base_spring_boot.model.Banner;
+import com.ra.base_spring_boot.dto.resp.PopularRouteResponse;
 import com.ra.base_spring_boot.model.Route;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,7 @@ public interface IRouteRepository extends JpaRepository<Route,Integer> {
     Route findById(int id);
 
     @Query("""
-select new com.ra.base_spring_boot.dto.resp.PopularRoutesDTO(
+select new com.ra.base_spring_boot.dto.resp.PopularRouteResponse(
   r.id,
   ds.name,
   arr.name,
@@ -34,5 +33,5 @@ join r.arrivalStation arr
 group by r.id,ds.name,arr.name
 order by count(t.id) desc
 """)
-    List<PopularRoutesDTO> getPopularRouter(Pageable pageable);
+    List<PopularRouteResponse> getPopularRouter(Pageable pageable);
 }
