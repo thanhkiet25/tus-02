@@ -15,3 +15,4 @@ public class StationListResponse {
     private String location;
     private String image;
 }
+

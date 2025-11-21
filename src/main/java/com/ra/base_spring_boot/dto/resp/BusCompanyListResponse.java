@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
+
 public class BusCompanyListResponse {
     private int id;
     private String companyName;

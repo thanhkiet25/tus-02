@@ -2,7 +2,7 @@ package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.resp.TicketResponse;
-import com.ra.base_spring_boot.services.impl.TicketService;
+import com.ra.base_spring_boot.services.impl.TicketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class TicketController {
     @Autowired
-    private TicketService ticketService;
+    private TicketServiceImpl ticketService;
     @GetMapping("/tickets/search")
     public ResponseEntity<ResponseWrapper<TicketResponse>> searchTicket(
             @RequestParam Integer id,

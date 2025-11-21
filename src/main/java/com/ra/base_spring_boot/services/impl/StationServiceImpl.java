@@ -27,7 +27,7 @@ public class StationServiceImpl implements IStationService {
 
     @Override
     public Page<StationListResponse> findAllAndSearch(Pageable pageable, String search) {
-        Page<Station> listStation =stationRepository.findAllAndSearch(pageable, search);
+        Page<Station> listStation =stationRepository.findAllAndSearch(search, pageable);
         return listStation.map(e -> StationListResponse.builder()
                 .id(e.getId())
                 .stationName(e.getName())

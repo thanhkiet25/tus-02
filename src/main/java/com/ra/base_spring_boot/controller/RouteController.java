@@ -7,6 +7,7 @@ import com.ra.base_spring_boot.services.IRouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class RouteController {
     private final IRouteService routeService;
 
     @GetMapping
-    public ResponseEntity<?> getAllRoute(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+    public ResponseEntity<?> getAllRoute(@PageableDefault(page = 0, size = 10,direction = Sort.Direction.ASC) Pageable pageable) {
         Page<RouteListResponse> listRouteResp = routeService.getAllRoute(pageable);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
