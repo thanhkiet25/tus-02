@@ -86,6 +86,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
 
     @Override
     public BusCompany findBusCompanyById(int id) {
+
         return busCompanyRepository.findBusCompanyById(id);
     }
 
