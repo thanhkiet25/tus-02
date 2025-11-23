@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @Builder
 @Table(name = "schedules")
-public class Schedule extends BaseObject {
+public class  Schedule extends BaseObject {
     @Column(name = "departure_time")
     private LocalDateTime departureTime;
 

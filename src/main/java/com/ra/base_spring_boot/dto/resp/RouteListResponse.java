@@ -1,16 +1,16 @@
 package com.ra.base_spring_boot.dto.resp;
 
 import com.ra.base_spring_boot.model.Route;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
-
-public class ListRouteResponse {
-
+public class RouteListResponse {
     private int id;
 
     private Double price;
@@ -23,13 +23,12 @@ public class ListRouteResponse {
 
     private String arrivalStation;
 
-    public ListRouteResponse(Route route) {
+    public RouteListResponse(Route route) {
         this.id = route.getId();
         this.price = route.getPrice();
         this.duration = route.getDuration();
         this.distance = route.getDistance();
         this.departureStation = route.getDepartureStation().getName();
         this.arrivalStation = route.getArrivalStation().getName();
-
     }
 }
