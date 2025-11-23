@@ -1,7 +1,6 @@
 package com.ra.base_spring_boot.services.impl;
 
 import com.ra.base_spring_boot.dto.req.BusCreateRequest;
-import com.ra.base_spring_boot.dto.req.BusUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.BusResponse;
 import com.ra.base_spring_boot.dto.resp.BusListResponse;
 import com.ra.base_spring_boot.exception.HttpConflict;
@@ -10,16 +9,12 @@ import com.ra.base_spring_boot.model.*;
 import com.ra.base_spring_boot.repository.IBusRepository;
 import com.ra.base_spring_boot.services.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

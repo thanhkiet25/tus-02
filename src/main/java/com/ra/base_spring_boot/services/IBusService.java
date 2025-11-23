@@ -2,7 +2,6 @@ package com.ra.base_spring_boot.services;
 
 
 import com.ra.base_spring_boot.dto.req.BusCreateRequest;
-import com.ra.base_spring_boot.dto.req.BusUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.BusResponse;
 import com.ra.base_spring_boot.dto.resp.BusListResponse;
 import org.springframework.data.domain.Page;
@@ -17,8 +16,5 @@ public interface IBusService {
     String delete(int id);
 
     Page<BusListResponse> findAllByPage(Pageable pageable, String search);
-
-
-
 
 }
