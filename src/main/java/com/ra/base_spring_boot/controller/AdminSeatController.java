@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,9 @@ public class AdminSeatController {
 
     private final IBusCompanyService busCompanyService;
 
-    @GetMapping("/{busCompanyId}")
-    public ResponseEntity<?> getAllSeatByBusCompany(@PathVariable int busCompanyId, @PageableDefault(page = 0, size = 10) Pageable pageable) {
-       Page<SeatListResponse> seatListResponse = seatService.findAllByBusCompany(busCompanyId, pageable);
+    @GetMapping("/{bus_company_id}")
+    public ResponseEntity<?> getAllSeatByBusCompany(@PathVariable int bus_company_id, @PageableDefault(page = 0, size = 10,sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam (defaultValue = "")  String searchBusName) {
+       Page<SeatListResponse> seatListResponse = seatService.findAllByBusCompany(bus_company_id, searchBusName, pageable);
        return new ResponseEntity<>(
                ResponseWrapper.builder()
                        .status(HttpStatus.OK)
@@ -58,7 +59,7 @@ public class AdminSeatController {
                         .status(HttpStatus.OK)
                         .code(HttpStatus.OK.value())
                         .data("Delete seat successfully")
-                        .build(),HttpStatus.NO_CONTENT
+                        .build(),HttpStatus.OK
         );
     }
 }

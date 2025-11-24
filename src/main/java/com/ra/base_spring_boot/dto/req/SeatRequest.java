@@ -30,10 +30,4 @@ public class SeatRequest {
     private Double priceForSeatType;
     @NotNull(message = "bus id is not null")
     private int busId;
-    @NotNull(message = "created date is not null")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime createdAt;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotNull(message = "update date is not null")
-    private LocalDateTime updatedAt;
 }

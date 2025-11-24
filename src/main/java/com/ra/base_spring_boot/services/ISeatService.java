@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ISeatService {
-    Page<SeatListResponse> findAllByBusCompany(int busCompanyId, Pageable pageable);
+    Page<SeatListResponse> findAllByBusCompany(int busCompanyId,String searchBusName, Pageable pageable);
 
     SeatResponse createSeat(SeatRequest seatRequest);
 

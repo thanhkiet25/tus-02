@@ -33,11 +33,13 @@ public class SeatServiceImpl implements ISeatService {
     private final IBusRepository busRepository;
 
     @Override
-    public Page<SeatListResponse> findAllByBusCompany(int busCompanyId, Pageable pageable) {
-        BusCompany busCompany = busCompanyRepository.findById(busCompanyId).orElseThrow(()-> new HttpNotFound("Not found bus company id is" + busCompanyId));
-        return seatRepository.findAllByBus_BusCompany_Id(busCompanyId, pageable).map(SeatListResponse::new);
+    public Page<SeatListResponse> findAllByBusCompany(int busCompanyId, String searchBusName, Pageable pageable) {
+        BusCompany busCompany = busCompanyRepository.findById(busCompanyId).orElseThrow(() -> new HttpNotFound("Not found bus company id is " + busCompanyId));
+        if (busCompany.getId() != null) {
+            return seatRepository.findAllByBus_BusCompany_IdAndBus_NameContaining(busCompanyId, searchBusName, pageable).map(SeatListResponse::new);
+        }
+        return null;
     }
-
     @Override
     public SeatResponse createSeat(SeatRequest seatRequest) {
         if(seatRepository.existsSeatBySeatNumberAndBus_Id(seatRequest.getSeatNumber(),seatRequest.getBusId())){
@@ -50,8 +52,6 @@ public class SeatServiceImpl implements ISeatService {
         seat.setPriceForSeatType(seatRequest.getPriceForSeatType());
         Bus bus = busRepository.findById(seatRequest.getBusId()).orElseThrow(() -> new HttpNotFound("Not found bus id is" + seatRequest.getBusId()));
         seat.setBus(bus);
-        seat.setCreatedAt(LocalDateTime.now());
-        seat.setUpdatedAt(seatRequest.getUpdatedAt());
         Seat newSeat = seatRepository.save(seat);
         return new SeatResponse(newSeat);
     }
@@ -59,11 +59,13 @@ public class SeatServiceImpl implements ISeatService {
     @Override
     public void deleteSeat( int seatId) {
         Seat seat = seatRepository.findById(seatId).orElseThrow(() -> new HttpNotFound("Not found seat id is" + seatId));
+        if(seatRepository.hasRelatedTickets(seatId)){
+            throw new HttpConflict ("Can not delete seat because seat has related tickets, please remove ticket.");
+        }
        if(seat.getStatus() == SeatStatus.AVAILABLE){
-           seat.setStatus(SeatStatus.BOOKED);
-           seatRepository.save(seat);
+           seatRepository.deleteById(seatId);
        }else {
-           throw new HttpConflict("seat status is " + seat.getStatus());
+           throw new HttpConflict("seat status is " + seat.getStatus() +" can not delete.");
        }
     }
 }
