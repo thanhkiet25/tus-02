@@ -22,12 +22,4 @@ public class BusReviewServiceImpl implements IBusReviewService {
         return busReviewRepository.getPopularBusReviews(PageRequest.of(0, limit));
     }
 
-    @Override
-    public Set<BusReview> findBusReviewsByBusId(List<Integer> id) {
-        Set<BusReview> busReviews = new HashSet<>();
-        for (Integer i : id) {
-            busReviews.add(busReviewRepository.findBusReviewById(i));
-        }
-        return busReviews;
-    }
 }

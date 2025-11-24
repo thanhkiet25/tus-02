@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/admin/bus")
@@ -21,7 +24,7 @@ public class AminBusController {
 
     @GetMapping
     public ResponseEntity<?> findAllAndSearchBus(@RequestParam(defaultValue = "") String search,
-                                                 @PageableDefault(page = 0, size = 10, sort = "createdAt" , direction = Sort.Direction.ASC)Pageable pageable){
+                                                 @PageableDefault(page = 0, size = 10, sort = "createdAt" , direction = Sort.Direction.DESC)Pageable pageable){
         return new ResponseEntity<>(ResponseWrapper.builder()
                 .status(HttpStatus.OK)
                 .code(HttpStatus.OK.value())
@@ -36,7 +39,6 @@ public class AminBusController {
                 .data(busService.save(busCreateRequest))
                 .build(),HttpStatus.OK);
     }
-
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateBus(@Valid @ModelAttribute BusCreateRequest busCreateRequest, @PathVariable int id){
         return new ResponseEntity<>(ResponseWrapper.builder()

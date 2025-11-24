@@ -10,6 +10,4 @@ public interface IScheduleService {
 
     List<SearchScheduleResponse> searchSchedule(Long fromId, Long toId, LocalDate date);
 
-
-    Set<Schedule> findSchedule(List<Integer> id);
 }

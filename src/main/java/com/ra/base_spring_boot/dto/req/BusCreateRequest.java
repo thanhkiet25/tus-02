@@ -2,6 +2,7 @@ package com.ra.base_spring_boot.dto.req;
 
 import com.ra.base_spring_boot.model.BusCompany;
 import com.ra.base_spring_boot.model.Station;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class BusCreateRequest {
     @NotNull(message = "vui long khong de trong")
     private Integer capacity;
     @NotNull(message = "vui long khong de trong")
+    @Schema(type = "string" , format = "binary")
     private Set<MultipartFile> busImage;
     private int busCompanyId;
 }

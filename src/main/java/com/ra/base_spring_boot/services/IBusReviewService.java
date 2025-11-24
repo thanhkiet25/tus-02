@@ -8,5 +8,5 @@ import java.util.Set;
 public interface IBusReviewService {
     List<PopularBusReviewResponse>  getBusReviews(int limit);
 
-    Set<BusReview> findBusReviewsByBusId(List<Integer> id);
+
 }

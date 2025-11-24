@@ -21,12 +21,4 @@ public class ScheduleServiceImpl implements IScheduleService {
         return scheduleRepository.searchSchedule(fromId, toId, date);
     }
 
-    @Override
-    public Set<Schedule> findSchedule(List<Integer> id) {
-        Set<Schedule> list = new HashSet<>();
-        for (Integer i : id){
-            list.add(iScheduleRepository.findScheduleById(i));
-        }
-        return list;
-    }
 }
