@@ -6,6 +6,8 @@ import com.ra.base_spring_boot.converter.BusCompanyConverter;
 import com.ra.base_spring_boot.dto.req.BusCompanyRequest;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
+import com.ra.base_spring_boot.dto.resp.BusCompanyListResponse;
+import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.BusCompany;
 import com.ra.base_spring_boot.repository.IBusCompanyRepository;
 import com.ra.base_spring_boot.services.IBusCompanyService;
@@ -31,7 +33,8 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
                         .companyName(company.getCompanyName())
                         .build()
                 );
-        return PageResponse.<BusCompanyResponse>builder()
+        return PageResponse
+                .<BusCompanyResponse>builder()
                 .data(page.getContent())
                 .currentPage(page.getNumber())
                 .totalElements(page.getTotalElements())
@@ -54,6 +57,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
     public List<PopularBusCompanyResponse> getPopularBusCompanyDTO(int limit) {
         return busCompanyRepository.getPopularBusCompany(PageRequest.of(0, limit));
     }
+
 
 
     @Override
@@ -85,12 +89,6 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
     }
 
     @Override
-    public BusCompany findBusCompanyById(int id) {
-
-        return busCompanyRepository.findBusCompanyById(id);
-    }
-
-    @Override
     public BusCompany updateBusCompany(int id,BusCompanyRequest busCompanyRequest) {
       if(busCompanyRepository.existsByCompanyNameAndIdNot(busCompanyRequest.getCompanyName(),id)){
           throw new HttpBadRequest("CompanyName already exists");
@@ -108,6 +106,11 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
             busCompanyRepository.delete(existingCompany);
     }
 
+    @Override
+    public BusCompany findBusCompanyById(int id) {
+        BusCompany busCompany = busCompanyRepository.findById(id).orElseThrow(() -> new HttpNotFound("id not found"));
+        return busCompany;
+    }
 }
 
 

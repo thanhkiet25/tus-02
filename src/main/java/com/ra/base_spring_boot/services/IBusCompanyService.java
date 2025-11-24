@@ -5,6 +5,9 @@ import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
 import com.ra.base_spring_boot.model.BusCompany;
 import org.springframework.data.domain.Page;
 
+import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
+import com.ra.base_spring_boot.model.BusCompany;
+
 import java.util.List;
 
 public interface IBusCompanyService {

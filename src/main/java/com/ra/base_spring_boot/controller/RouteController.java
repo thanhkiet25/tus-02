@@ -35,7 +35,7 @@ public class RouteController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> getRouteById(@PathVariable Integer id) {
-        RouteListResponse route = routeService.findById(id);
+        RouteResponse route = routeService.findById(id);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
                         .code(HttpStatus.OK.value())

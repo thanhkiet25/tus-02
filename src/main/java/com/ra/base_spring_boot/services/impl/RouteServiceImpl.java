@@ -7,6 +7,7 @@ import com.ra.base_spring_boot.dto.resp.RouteResponse;
 import com.ra.base_spring_boot.dto.req.RouteRequest;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpNotFound;
+
 import com.ra.base_spring_boot.model.Route;
 import com.ra.base_spring_boot.model.Station;
 import com.ra.base_spring_boot.repository.IRouteRepository;
@@ -27,15 +28,15 @@ import java.util.Optional;
 public class RouteServiceImpl implements IRouteService {
     private final IRouteRepository routeRepository;
      private final IStationRepository stationRepository;
-
+    @Override
     public Page<RouteListResponse> getAllRoute(Pageable pageable) {
         return routeRepository.findAll(pageable).map(RouteListResponse::new);
 
     }
     @Override
-    public RouteListResponse findById(int id) {
+    public RouteResponse findById(int id) {
         Route route = routeRepository.findById(id).orElseThrow(()-> new HttpNotFound("Route not found with id: " + id));
-        return new RouteListResponse(route);
+        return new RouteResponse(route);
     }
 
     @Override
@@ -129,12 +130,6 @@ public void deleteRoute(int id) {
             .orElseThrow(() -> new HttpNotFound("Route not found with id: " + id));
     routeRepository.delete(route);
 }
-
-    
-    
-
-
-
 
 
 }
