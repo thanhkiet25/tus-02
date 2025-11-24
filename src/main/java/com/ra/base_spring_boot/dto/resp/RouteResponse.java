@@ -27,8 +27,8 @@ public class RouteResponse {
 
     private  LocalDateTime updatedAt;
 
-
     public RouteResponse(Route route) {
+        this.id = route.getId();
         this.price = route.getPrice();
         this.duration = route.getDuration();
         this.distance = route.getDistance();
@@ -38,5 +38,6 @@ public class RouteResponse {
         this.updatedAt = route.getUpdatedAt();
 
     }
+    
 
 }
