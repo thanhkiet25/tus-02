@@ -60,12 +60,12 @@ public class BusServiceImpl implements IBusService {
         Bus saveBus = busRepository.save(bus);
         String listImage = saveBus.getImages().stream().map(BusImage::getImageUrl).collect(Collectors.joining(","));
         return BusResponse.builder()
+                .id(saveBus.getId())
                 .name(saveBus.getName())
                 .licensePlate(saveBus.getLicensePlate())
                 .capacity(saveBus.getCapacity())
                 .busCompanyName(saveBus.getBusCompany().getCompanyName())
                 .busImage(listImage)
-                .createdAt(LocalDateTime.now())
                 .descriptions(saveBus.getDescriptions())
                 .build();
     }
@@ -88,7 +88,6 @@ public class BusServiceImpl implements IBusService {
                 BusImage busImage = new BusImage();
                 busImage.setImageUrl(imageUrl);
                 busImage.setBus(bus);
-                bus.getImages().add(busImage);
             }
         }else {
             bus.setImages(bus.getImages());
@@ -97,11 +96,11 @@ public class BusServiceImpl implements IBusService {
         Bus newBus = busRepository.save(bus);
         String busImage = newBus.getImages().stream().map(BusImage::getImageUrl).collect(Collectors.joining(","));
         return BusResponse.builder()
+                .id(id)
                 .descriptions(newBus.getDescriptions())
                 .name(newBus.getName())
                 .licensePlate(newBus.getLicensePlate())
                 .capacity(newBus.getCapacity())
-                .createdAt(LocalDateTime.now())
                 .busCompanyName(newBus.getBusCompany().getCompanyName())
                 .busImage(busImage)
                 .build();

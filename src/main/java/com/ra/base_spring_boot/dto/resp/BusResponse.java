@@ -14,12 +14,12 @@ import java.util.Set;
 @Data
 @Builder
 public class BusResponse {
+    private int id;
     private String name;
     private String descriptions;
     private String licensePlate;
     private Integer capacity;
     private String busImage;
-    private LocalDateTime createdAt;
     private String busCompanyName;
 
 }
