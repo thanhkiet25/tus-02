@@ -1,4 +1,5 @@
 package com.ra.base_spring_boot.services.impl;
+
 import com.ra.base_spring_boot.dto.req.StationCreateRequest;
 import com.ra.base_spring_boot.dto.req.StationUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.PopularStationResponse;
@@ -16,9 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -28,14 +27,13 @@ public class StationServiceImpl implements IStationService {
 
     @Override
     public Page<StationListResponse> findAllAndSearch(Pageable pageable, String search) {
-        Page<Station> listStation = stationRepository.findAllAndSearch(search, pageable);
+        Page<Station> listStation =stationRepository.findAllAndSearch(search, pageable);
         return listStation.map(e -> StationListResponse.builder()
                 .id(e.getId())
                 .stationName(e.getName())
                 .location(e.getLocation())
                 .image(e.getImage())
-                .build()
-        );
+                .build());
     }
 
     @Override
@@ -53,17 +51,21 @@ public class StationServiceImpl implements IStationService {
 
     @Override
     public StationResponse createStation(StationCreateRequest request) {
-        if (stationRepository.existsByName(request.getName())) {
-            throw new HttpConflict("Station name '" + request.getName() + "' already exists");
+
+        if (stationRepository.existsByName(request.getName().trim())) {
+            throw new HttpConflict("Station name '" + request.getName().trim() + "' already exists");
         }
 
-//        if (request.getLocation() == null || request.getLocation().trim().isEmpty()) {
-//            throw new HttpBadRequest("Location cannot be empty");
-//        }
+        if (request.getLocation() == null || request.getLocation().trim().isEmpty()) {
+            throw new HttpBadRequest("Location cannot be empty");
+        }
         Station station = new Station();
-        station.setName(request.getName());
-        station.setLocation(request.getLocation());
-        station.setDescriptions(request.getDescriptions());
+        station.setName(request.getName().trim());
+        station.setLocation(request.getLocation().trim());
+
+        if (request.getDescriptions() != null) {
+            station.setDescriptions(request.getDescriptions().trim());
+        }
 
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
             String imageUrl = cloudinaryService.upload(request.getImageFile());
@@ -84,26 +86,22 @@ public class StationServiceImpl implements IStationService {
         Station station = stationRepository.findById(id)
                 .orElseThrow(() -> new HttpNotFound("Station not found with id: " + id));
 
-        if (request.getName() != null && !request.getName().isEmpty()) {
-            if (!station.getName().equals(request.getName())) {
-
-                if (stationRepository.existsByNameAndIdNot(request.getName(), id)) {
-                    throw new HttpConflict("Station name '" + request.getName() + "' already exists");
+        if (request.getName() != null && !request.getName().trim().isEmpty()) {
+            String newName = request.getName().trim();
+            if (!station.getName().equals(newName)) {
+                if (stationRepository.existsByNameAndIdNot(newName, id)) {
+                    throw new HttpConflict("Station name '" + newName + "' already exists");
                 }
             }
-            station.setName(request.getName());
+            station.setName(newName);
         }
 
-        if (request.getLocation() != null && !request.getLocation().isEmpty()) {
-            if (request.getLocation().trim().isEmpty()) {
-                throw new HttpBadRequest("Location cannot be empty");
-            }
-            station.setLocation(request.getLocation());
+        if (request.getLocation() != null && !request.getLocation().trim().isEmpty()) {
+            station.setLocation(request.getLocation().trim());
         }
-
 
         if (request.getDescriptions() != null) {
-            station.setDescriptions(request.getDescriptions());
+            station.setDescriptions(request.getDescriptions().trim());
         }
 
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
@@ -134,6 +132,5 @@ public class StationServiceImpl implements IStationService {
         stationRepository.delete(station);
         return response;
     }
-
 }
 
