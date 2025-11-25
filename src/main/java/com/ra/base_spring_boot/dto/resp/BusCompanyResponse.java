@@ -14,4 +14,6 @@ public class BusCompanyResponse {
     private String companyName;
     private String image;
     private String descriptions;
+    private String companyImage;
+    private String description;
 }

@@ -55,7 +55,6 @@ or lower(r.departureStation.name) like lower(concat('%', :keyword,'%') )
             @Param("excludeId") Integer excludeId
     );
 
-
 }
 
 

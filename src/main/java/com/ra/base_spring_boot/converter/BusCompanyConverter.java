@@ -1,11 +1,13 @@
 package com.ra.base_spring_boot.converter;
 
 import com.ra.base_spring_boot.dto.req.BusCompanyRequest;
+
 import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
+
 import com.ra.base_spring_boot.model.BusCompany;
 import org.springframework.stereotype.Component;
 
-import java.util.Locale;
+
 
 @Component
 public class BusCompanyConverter {
@@ -17,6 +19,7 @@ public class BusCompanyConverter {
                 .build();
 
     }
+
     public BusCompanyResponse toBusCompanyResponse(BusCompany busCompany) {
         return BusCompanyResponse.builder()
                 .id(busCompany.getId())
@@ -25,4 +28,5 @@ public class BusCompanyConverter {
                 .descriptions(busCompany.getDescriptions())
                 .build();
     }
+
 }

@@ -6,7 +6,6 @@ import com.ra.base_spring_boot.converter.BusCompanyConverter;
 import com.ra.base_spring_boot.dto.req.BusCompanyRequest;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
-import com.ra.base_spring_boot.dto.resp.BusCompanyListResponse;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.BusCompany;
 import com.ra.base_spring_boot.repository.IBusCompanyRepository;
@@ -33,6 +32,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
                         .companyName(company.getCompanyName())
                         .build()
                 );
+
         return PageResponse
                 .<BusCompanyResponse>builder()
                 .data(page.getContent())
@@ -40,6 +40,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
                 .totalElements(page.getTotalElements())
                 .build();
     }
+
 
 
     public BusCompanyResponse getCompanyById(int id) {
@@ -62,18 +63,19 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
 
     @Override
     public Page<BusCompanyResponse> findBusCompanyByNameAndGetAllAndSort(String search,int page,int size, String sortBy, String direction) {
-        Sort sort = direction.equalsIgnoreCase("desc")?
-                Sort.by(sortBy).descending():
+        Sort sort = direction.equalsIgnoreCase("desc") ?
+                Sort.by(sortBy).descending() :
                 Sort.by(sortBy).ascending();
 
-        Pageable pageable = PageRequest.of(page,size,sort);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-         Page<BusCompany> companyPage =
-                 (search==null || search.trim().isEmpty()) ?
-                 busCompanyRepository.findAll(pageable)    :
-                 busCompanyRepository.findByCompanyNameContainingIgnoreCase(search, pageable);
+        Page<BusCompany> companyPage =
+                (search == null || search.trim().isEmpty()) ?
+                        busCompanyRepository.findAll(pageable) :
+                        busCompanyRepository.findByCompanyNameContainingIgnoreCase(search, pageable);
 
-         return companyPage.map(busCompanyConverter::toBusCompanyResponse);
+        return companyPage.map(busCompanyConverter::toBusCompanyResponse);
+
     }
 
     @Override
@@ -87,6 +89,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
         }
            return busCompanyRepository.save(busCompanyConverter.toBusCompany(busCompanyRequest));
     }
+
 
     @Override
     public BusCompany updateBusCompany(int id,BusCompanyRequest busCompanyRequest) {

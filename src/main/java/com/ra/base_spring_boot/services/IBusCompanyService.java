@@ -22,5 +22,4 @@ public interface IBusCompanyService {
     BusCompany updateBusCompany(int id,BusCompanyRequest busCompanyRequest);
 
     void deleteBusCompany(int id);
-
 }
