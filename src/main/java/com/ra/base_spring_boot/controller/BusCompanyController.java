@@ -1,6 +1,7 @@
 package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
+import com.ra.base_spring_boot.dto.resp.BusCompanyListResponse;
 import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
 import com.ra.base_spring_boot.dto.resp.PageResponse;
 import com.ra.base_spring_boot.services.impl.BusCompanyServiceImpl;

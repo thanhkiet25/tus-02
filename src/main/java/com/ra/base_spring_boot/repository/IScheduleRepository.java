@@ -29,4 +29,6 @@ order by s.departureTime asc
             @Param("toId") Long toId,
             @Param("date") LocalDate date
             );
+
+    Schedule findScheduleById(Integer id);
 }

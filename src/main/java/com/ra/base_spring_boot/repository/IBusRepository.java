@@ -12,5 +12,11 @@ import org.springframework.stereotype.Repository;
 
         @Query("select b from Bus b where b.name like concat('%' , :search , '%') ")
         Page<Bus> findAllAndSearch(Pageable pageable , String search);
+
+        boolean existsBusByName(String busName);
+
+        boolean existsBusByNameAndIdNot(String busName, Integer busId);
     }
+
+
 

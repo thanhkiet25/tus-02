@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class StationDataResponse {
+public class BusListResponse {
     private int id;
-    private String companyName;
+    private String name;
+    private String description;
+    private String lisensePlate;
+    private int capacity;
+
 }

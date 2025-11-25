@@ -1,5 +1,4 @@
 package com.ra.base_spring_boot.services;
-
 import com.ra.base_spring_boot.dto.resp.PopularRoutesResponse;
 import com.ra.base_spring_boot.dto.resp.RouteListResponse;
 import com.ra.base_spring_boot.dto.resp.RouteResponse;
@@ -16,9 +15,10 @@ public interface IRouteService {
 
  Page<RouteListResponse> getAllRoute(Pageable pageable);
 
- RouteListResponse findById(int id);
+ RouteResponse findById(int id);
 
  List<PopularRoutesResponse> getPopularRoutes(int limit);
+
 
 
  // Hien thi danh sach cac route

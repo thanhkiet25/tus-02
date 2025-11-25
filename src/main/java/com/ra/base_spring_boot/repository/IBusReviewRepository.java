@@ -29,4 +29,6 @@ order by r.rating desc , r.createdAt desc
 """)
     List<PopularBusReviewResponse> getPopularBusReviews(Pageable pageable);
 
+    BusReview findBusReviewById(int id);
+
 }
