@@ -1,13 +1,8 @@
 package com.ra.base_spring_boot.converter;
-
 import com.ra.base_spring_boot.dto.req.BusCompanyRequest;
-
 import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
-
 import com.ra.base_spring_boot.model.BusCompany;
 import org.springframework.stereotype.Component;
-
-
 
 @Component
 public class BusCompanyConverter {

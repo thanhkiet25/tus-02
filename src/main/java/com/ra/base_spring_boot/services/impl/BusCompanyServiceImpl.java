@@ -90,7 +90,6 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
            return busCompanyRepository.save(busCompanyConverter.toBusCompany(busCompanyRequest));
     }
 
-
     @Override
     public BusCompany updateBusCompany(int id,BusCompanyRequest busCompanyRequest) {
       if(busCompanyRepository.existsByCompanyNameAndIdNot(busCompanyRequest.getCompanyName(),id)){

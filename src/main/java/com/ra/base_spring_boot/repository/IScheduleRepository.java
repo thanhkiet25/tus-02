@@ -1,6 +1,8 @@
 package com.ra.base_spring_boot.repository;
 import com.ra.base_spring_boot.dto.resp.SearchScheduleResponse;
 import com.ra.base_spring_boot.model.Schedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,4 +33,19 @@ order by s.departureTime asc
             );
 
     Schedule findScheduleById(Integer id);
+
+  @Query("""
+select sch from Schedule sch
+join sch.route r
+join r.departureStation ds
+join r.arrivalStation arr
+join sch.bus b
+where
+(:keyword is null or
+ds.name like %:keyword% or
+arr.name like %:keyword% or
+b.name like %:keyword%)
+""")
+    Page<Schedule> searchSchedule(@Param("keyword")  String keyword, Pageable pageable);
+
 }
