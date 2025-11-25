@@ -13,13 +13,13 @@ import java.util.List;
 
 public interface IRouteService {
 
+
  Page<RouteListResponse> getAllRoute(Pageable pageable);
+
 
  RouteResponse findById(int id);
 
  List<PopularRoutesResponse> getPopularRoutes(int limit);
-
-
 
  // Hien thi danh sach cac route
  Page<RouteResponse> findAllAndSearchRoute(@Param("keyword") String keyword, int page, int size, String sortBy, String direction);

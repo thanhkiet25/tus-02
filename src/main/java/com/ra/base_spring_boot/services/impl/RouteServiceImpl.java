@@ -31,7 +31,6 @@ public class RouteServiceImpl implements IRouteService {
     @Override
     public Page<RouteListResponse> getAllRoute(Pageable pageable) {
         return routeRepository.findAll(pageable).map(RouteListResponse::new);
-
     }
     @Override
     public RouteResponse findById(int id) {
@@ -130,6 +129,5 @@ public void deleteRoute(int id) {
             .orElseThrow(() -> new HttpNotFound("Route not found with id: " + id));
     routeRepository.delete(route);
 }
-
 
 }

@@ -36,7 +36,7 @@ public class SeatServiceImpl implements ISeatService {
     public Page<SeatListResponse> findAllByBusCompany(int busCompanyId, String searchBusName, Pageable pageable) {
         BusCompany busCompany = busCompanyRepository.findById(busCompanyId).orElseThrow(() -> new HttpNotFound("Not found bus company id is " + busCompanyId));
         if (busCompany.getId() != null) {
-            return seatRepository.findAllByBus_BusCompany_IdAndBus_NameContaining(busCompanyId, searchBusName, pageable).map(SeatListResponse::new);
+            return seatRepository.findAllByBus_BusCompany_IdAndBus_BusNameContaining(busCompanyId, searchBusName, pageable).map(SeatListResponse::new);
         }
         return null;
     }

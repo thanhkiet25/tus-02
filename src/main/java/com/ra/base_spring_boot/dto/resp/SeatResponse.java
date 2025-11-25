@@ -40,7 +40,7 @@ public class SeatResponse {
         this.status = seat.getStatus();
         this.priceForSeatType = seat.getPriceForSeatType();
         this.busId = seat.getBus().getId();
-        this.busName = seat.getBus().getName();
+        this.busName = seat.getBus().getBusName();
         this.createdAt = seat.getCreatedAt();
         this.updatedAt = seat.getUpdatedAt();
     }

@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 @Table(name = "buses")
 public class Bus extends BaseObject {
-    private String name;
+    private String busName;
 
     @Column(columnDefinition = "text")
     private String descriptions;

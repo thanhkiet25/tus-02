@@ -1,5 +1,4 @@
 package com.ra.base_spring_boot.services.impl;
-
 import com.ra.base_spring_boot.dto.req.StationCreateRequest;
 import com.ra.base_spring_boot.dto.req.StationUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.PopularStationResponse;
@@ -35,9 +34,8 @@ public class StationServiceImpl implements IStationService {
                 .stationName(e.getName())
                 .location(e.getLocation())
                 .image(e.getImage())
-                .build());
-
-
+                .build()
+        );
     }
 
     @Override

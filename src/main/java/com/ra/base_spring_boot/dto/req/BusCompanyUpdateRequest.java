@@ -1,5 +1,6 @@
 package com.ra.base_spring_boot.dto.req;
 
+import org.springframework.web.multipart.MultipartFile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class BusCompanyRequest {
+public class BusCompanyUpdateRequest {
     private String companyName;
-    private String companyImage;
+    private MultipartFile imageFile;
     private String description;
 }

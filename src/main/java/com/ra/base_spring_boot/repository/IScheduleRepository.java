@@ -1,10 +1,13 @@
 package com.ra.base_spring_boot.repository;
 import com.ra.base_spring_boot.dto.resp.SearchScheduleResponse;
 import com.ra.base_spring_boot.model.Schedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IScheduleRepository extends JpaRepository<Schedule,Integer> {
@@ -31,4 +34,44 @@ order by s.departureTime asc
             );
 
     Schedule findScheduleById(Integer id);
+
+  @Query("""
+select sch from Schedule sch
+join sch.route r
+join r.departureStation ds
+join r.arrivalStation arr
+join sch.bus b
+where
+(:keyword is null or
+ds.name like %:keyword% or
+arr.name like %:keyword% or
+b.busName like %:keyword%)
+""")
+    Page<Schedule> searchSchedule(@Param("keyword")  String keyword, Pageable pageable);
+
+  // create check giờ đi - đến của bus ở lịch trình cũ và mới không đuọc trung nhau
+    @Query("""
+select count(sch) from Schedule sch
+where sch.bus.id = :busId
+and(:departureTime < sch.arrivalTime and :arrivalTime >sch.departureTime )
+""")
+    int overLappingSchedules(
+            @Param("busId") Integer busId,
+            @Param("departureTime")LocalDateTime departureTime,
+            @Param("arrivalTime")LocalDateTime arrivalTime
+            );
+
+    // update check giờ đi - đến của bus ở lịch trình cũ và mới không đuọc trung nhau
+    @Query("""
+select count(sch) from Schedule sch
+where sch.bus.id = :busId
+and sch.id <> :scheduleId
+and(:departureTime < sch.arrivalTime and :arrivalTime >sch.departureTime )
+""")
+    int overLappingSchedules(
+            @Param("busId") Integer busId,
+            @Param("scheduleId") Integer scheduleId,
+            @Param("departureTime")LocalDateTime departureTime,
+            @Param("arrivalTime")LocalDateTime arrivalTime
+    );
 }
