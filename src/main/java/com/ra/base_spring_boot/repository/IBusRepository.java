@@ -9,12 +9,17 @@ import org.springframework.stereotype.Repository;
 @Repository
     public interface IBusRepository extends JpaRepository<Bus,Integer> {
 
-        @Query("select b from Bus b where b.name like concat('%' , :search , '%') ")
+        @Query("select b from Bus b where b.busName like concat('%' , :search , '%') ")
         Page<Bus> findAllAndSearch(Pageable pageable , String search);
 
-        boolean existsBusByName(String busName);
+        boolean existsBusByBusName(String busName);
 
-        boolean existsBusByNameAndIdNot(String busName, Integer busId);
+        boolean existsBusByBusNameAndIdNot(String busName, Integer busId);
+
+         boolean existsByBusName(String busName);
+
+         boolean existsByBusNameAndIdNot(String busName, Integer id);
+
     }
 
 

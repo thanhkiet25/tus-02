@@ -1,6 +1,7 @@
 package com.ra.base_spring_boot.services;
+import com.ra.base_spring_boot.dto.req.BusCompanyUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
-import com.ra.base_spring_boot.dto.req.BusCompanyRequest;
+import com.ra.base_spring_boot.dto.req.BusCompanyCreateRequest;
 import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
 import com.ra.base_spring_boot.model.BusCompany;
 import org.springframework.data.domain.Page;
@@ -15,11 +16,11 @@ public interface IBusCompanyService {
 
     Page<BusCompanyResponse> findBusCompanyByNameAndGetAllAndSort(String search, int page, int size, String sortBy, String direction);
 
-    BusCompany createBusCompany(BusCompanyRequest busCompanyRequest);
+    BusCompany findById(Integer id);
 
-    BusCompany findBusCompanyById(int id);
+    BusCompanyResponse createBusCompany(BusCompanyCreateRequest busCompanyRequest);
 
-    BusCompany updateBusCompany(int id,BusCompanyRequest busCompanyRequest);
+    BusCompanyResponse updateBusCompany(int id, BusCompanyUpdateRequest busCompanyRequest);
 
-    void deleteBusCompany(int id);
+    BusCompanyResponse deleteBusCompany(int id);
 }

@@ -1,10 +1,12 @@
 package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
-import com.ra.base_spring_boot.dto.req.ScheduleRequest;
+import com.ra.base_spring_boot.dto.req.ScheduleCreateRequest;
+import com.ra.base_spring_boot.dto.req.ScheduleUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.ScheduleResponse;
 import com.ra.base_spring_boot.model.Schedule;
 import com.ra.base_spring_boot.services.IScheduleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/adminSchedule")
+@RequestMapping("/api/v1/admin/Schedules")
 public class AdminScheduleController {
    private final IScheduleService scheduleService;
 
@@ -35,9 +37,9 @@ public class AdminScheduleController {
       );
    }
    @PostMapping("/create")
-    public ResponseEntity<ResponseWrapper<?>> createSchedule(@RequestBody ScheduleRequest scheduleRequest) {
-       Schedule schedule = scheduleService.createSchedule(scheduleRequest);
-       return ResponseEntity.status(HttpStatus.OK).body(
+    public ResponseEntity<ResponseWrapper<?>> createSchedule(@Valid @RequestBody ScheduleCreateRequest scheduleRequest) {
+       ScheduleResponse schedule = scheduleService.createSchedule(scheduleRequest);
+       return ResponseEntity.status(HttpStatus.CREATED).body(
                ResponseWrapper.builder()
                        .status(HttpStatus.CREATED)
                        .code(201)
@@ -46,8 +48,8 @@ public class AdminScheduleController {
        );
    }
    @PostMapping("/update/{id}")
-    public ResponseEntity<ResponseWrapper<?>> updateSchedule(@PathVariable int id, @RequestBody ScheduleRequest scheduleRequest) {
-       Schedule schedule = scheduleService.updateSchedule(id, scheduleRequest);
+    public ResponseEntity<ResponseWrapper<?>> updateSchedule( @Valid @PathVariable int id, @RequestBody ScheduleUpdateRequest  scheduleRequest) {
+       ScheduleResponse schedule = scheduleService.updateSchedule(id, scheduleRequest);
        return ResponseEntity.status(HttpStatus.OK).body(
                ResponseWrapper.builder()
                        .status(HttpStatus.OK)
@@ -58,11 +60,12 @@ public class AdminScheduleController {
    }
    @DeleteMapping("/delete/{id}")
     public ResponseEntity<ResponseWrapper<?>> deleteSchedule(@PathVariable int id) {
-       scheduleService.deleteSchedule(id);
+       ScheduleResponse scheduleResponse = scheduleService.deleteSchedule(id);
        return ResponseEntity.status(HttpStatus.OK).body(
                ResponseWrapper.builder()
                        .status(HttpStatus.OK)
                        .code(200)
+                       .data(scheduleResponse)
                        .build()
        );
    }

@@ -1,7 +1,7 @@
 package com.ra.base_spring_boot.services;
+import com.ra.base_spring_boot.dto.req.ScheduleUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.SearchScheduleResponse;
-import com.ra.base_spring_boot.model.Schedule;
-import com.ra.base_spring_boot.dto.req.ScheduleRequest;
+import com.ra.base_spring_boot.dto.req.ScheduleCreateRequest;
 import com.ra.base_spring_boot.dto.resp.ScheduleResponse;
 import org.springframework.data.domain.Page;
 import java.time.LocalDate;
@@ -14,12 +14,10 @@ public interface IScheduleService {
 
     Page<ScheduleResponse> getScheduleAndSortAndSearch(String search, int page, int size, String sortBy, String direction);
 
-    Schedule createSchedule(ScheduleRequest scheduleRequest);
+    ScheduleResponse createSchedule(ScheduleCreateRequest scheduleRequest);
 
-    Schedule findScheduleById(int id);
+    ScheduleResponse updateSchedule(int id, ScheduleUpdateRequest scheduleUpdateRequest);
 
-    Schedule updateSchedule(int id, ScheduleRequest scheduleRequest);
-
-    void deleteSchedule(int id);
+    ScheduleResponse deleteSchedule(int id);
 
 }

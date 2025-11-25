@@ -1,8 +1,7 @@
 package com.ra.base_spring_boot.dto.req;
 
-import com.ra.base_spring_boot.model.Bus;
-import com.ra.base_spring_boot.model.Route;
 import com.ra.base_spring_boot.model.constants.ScheduleStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +13,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @Builder
-public class ScheduleRequest {
-    private Integer routeId;
+public class ScheduleUpdateRequest {
     private Integer busId;
-    private LocalDateTime departure;
-    private LocalDateTime arrival;
+    private Integer routeId;
+    private LocalDateTime departureTime;
+    private LocalDateTime arrivalTime;
     private Integer availableSeat;
     private Integer totalSeats;
     private ScheduleStatus status;

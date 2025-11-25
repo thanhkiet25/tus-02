@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ISeatRepository extends JpaRepository<Seat,Integer> {
-    Page<Seat> findAllByBus_BusCompany_IdAndBus_NameContaining(Integer busBusCompanyId, String searchBusName,  Pageable pageable);
+    Page<Seat> findAllByBus_BusCompany_IdAndBus_BusNameContaining(Integer busBusCompanyId, String searchBusName,  Pageable pageable);
 
     boolean existsSeatBySeatNumberAndBus_Id(String seatNumber, Integer busId);
 

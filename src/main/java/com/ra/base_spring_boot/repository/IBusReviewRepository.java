@@ -14,7 +14,7 @@ select  new com.ra.base_spring_boot.dto.resp.PopularBusReviewResponse(
     r.id,
     r.rating,
     r.review,
-    b.name,
+    b.busName,
     ds.name,
     arr.name,
     r.createdAt

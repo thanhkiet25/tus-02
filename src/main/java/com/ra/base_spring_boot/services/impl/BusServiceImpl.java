@@ -30,15 +30,15 @@ public class BusServiceImpl implements IBusService {
 
     @Override
     public BusResponse save(BusCreateRequest busReqDto) {
-        if(busRepository.existsBusByName(busReqDto.getName())){
+        if(busRepository.existsBusByBusName(busReqDto.getName())){
             throw new HttpConflict("duplicate name");
         }
         Bus bus = new Bus();
-        bus.setName(busReqDto.getName());
+        bus.setBusName(busReqDto.getName());
         bus.setDescriptions(busReqDto.getDescriptions());
         bus.setLicensePlate(busReqDto.getLicensePlate());
         bus.setCapacity(busReqDto.getCapacity());
-        bus.setBusCompany(busCompanyService.findBusCompanyById(busReqDto.getBusCompanyId()));
+        bus.setBusCompany(busCompanyService.findById(busReqDto.getBusCompanyId()));
         bus.setCreatedAt(LocalDateTime.now());
 
         //upload anh
@@ -56,7 +56,7 @@ public class BusServiceImpl implements IBusService {
         String listImage = saveBus.getImages().stream().map(BusImage::getImageUrl).collect(Collectors.joining(","));
         return BusResponse.builder()
                 .id(saveBus.getId())
-                .name(saveBus.getName())
+                .name(saveBus.getBusName())
                 .licensePlate(saveBus.getLicensePlate())
                 .capacity(saveBus.getCapacity())
                 .busCompanyName(saveBus.getBusCompany().getCompanyName())
@@ -68,14 +68,14 @@ public class BusServiceImpl implements IBusService {
     @Override
     public BusResponse update(BusCreateRequest busCreateRequest, int id) {
         Bus bus = busRepository.findById(id).orElseThrow(() -> new HttpNotFound("bus not found"));
-        if(busRepository.existsBusByNameAndIdNot(busCreateRequest.getName(), id)) {
+        if(busRepository.existsBusByBusNameAndIdNot(busCreateRequest.getName(), id)) {
             throw new HttpConflict("duplicate name");
         }
-        bus.setName(busCreateRequest.getName());
+        bus.setBusName(busCreateRequest.getName());
         bus.setDescriptions(busCreateRequest.getDescriptions());
         bus.setLicensePlate(busCreateRequest.getLicensePlate());
         bus.setCapacity(busCreateRequest.getCapacity());
-        bus.setBusCompany(busCompanyService.findBusCompanyById(busCreateRequest.getBusCompanyId()));
+        bus.setBusCompany(busCompanyService.findById(busCreateRequest.getBusCompanyId()));
         bus.setCreatedAt(LocalDateTime.now());
         if(busCreateRequest.getBusImage() != null && !busCreateRequest.getBusImage().isEmpty()){
             for (MultipartFile file : busCreateRequest.getBusImage()){
@@ -93,7 +93,7 @@ public class BusServiceImpl implements IBusService {
         return BusResponse.builder()
                 .id(id)
                 .descriptions(newBus.getDescriptions())
-                .name(newBus.getName())
+                .name(newBus.getBusName())
                 .licensePlate(newBus.getLicensePlate())
                 .capacity(newBus.getCapacity())
                 .busCompanyName(newBus.getBusCompany().getCompanyName())
@@ -113,7 +113,7 @@ public class BusServiceImpl implements IBusService {
         Page<Bus> list = busRepository.findAllAndSearch(pageable, search);
         return list.map(e -> BusListResponse.builder()
                 .id(e.getId())
-                .name(e.getName())
+                .name(e.getBusName())
                 .description(e.getDescriptions())
                 .capacity(e.getCapacity())
                 .lisensePlate(e.getLicensePlate())
