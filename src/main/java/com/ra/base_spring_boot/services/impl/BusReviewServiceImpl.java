@@ -3,7 +3,9 @@ package com.ra.base_spring_boot.services.impl;
 import com.ra.base_spring_boot.dto.req.BusReviewCreateResponse;
 import com.ra.base_spring_boot.dto.resp.BusReviewsResponse;
 import com.ra.base_spring_boot.dto.resp.PopularBusReviewResponse;
+import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpNotFound;
+import com.ra.base_spring_boot.model.Bus;
 import com.ra.base_spring_boot.model.BusReview;
 import com.ra.base_spring_boot.repository.IBusReviewRepository;
 import com.ra.base_spring_boot.services.IBusReviewService;
@@ -42,15 +44,9 @@ public class BusReviewServiceImpl implements IBusReviewService {
     }
 
     @Override
-    public Page<BusReviewsResponse> findAllBusReviews(Pageable pageable) {
-        Page<BusReview> list = busReviewRepository.findAll(pageable);
-        return list.map(e -> BusReviewsResponse.builder()
-                .busReviewId(e.getId())
-                .busId(e.getBus().getId())
-                .rating(e.getRating())
-                .review(e.getReview())
-                .createdAt(e.getCreatedAt())
-                .build());
+    public Page<BusReviewsResponse> findAllBusReviews(Pageable pageable , Integer rating) {
+        Page<BusReview> list = busReviewRepository.findAllBusReviews(pageable, rating);
+        return list.map(BusReviewsResponse::new);
     }
 
     @Override
@@ -59,19 +55,30 @@ public class BusReviewServiceImpl implements IBusReviewService {
         if (busReview == null) {
             throw new RuntimeException("Bus review không tồn tại với ID: " + busReview.getId());
         }
-      busReview.setRating(busReviewCreateResponse.getRating());
+
+        int busId = busReviewCreateResponse.getBusId();
+        Bus bus = busService.findBusById(busId);
+        if (bus == null) {
+            throw new RuntimeException("BusId: " + busId + "not found");
+        }
+        busReview.setBus(bus);
+
+        Integer rating = busReviewCreateResponse.getRating();
+        if (rating == null) {
+            throw new HttpBadRequest("Rating không được để trống");
+        }
+        if (rating > 10) {
+            throw new HttpBadRequest("Rating max is 10");
+        }
+        if (rating < 0) {
+            throw new HttpBadRequest("Rating min is 0");
+        }
+      busReview.setRating(rating);
       busReview.setReview(busReviewCreateResponse.getReview());
       busReview.setId(busReview.getId());
-      busReview.setBus(busService.findBusById(busReviewCreateResponse.getBusId()));
 
       BusReview newBusReview = busReviewRepository.save(busReview);
-      return BusReviewsResponse.builder()
-              .busReviewId(newBusReview.getId())
-              .busId(newBusReview.getBus().getId())
-              .rating(newBusReview.getRating())
-              .review(newBusReview.getReview())
-              .createdAt(LocalDateTime.now())
-              .build();
+        return new BusReviewsResponse(newBusReview);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.ra.base_spring_boot.model.BusCompany;
 import com.ra.base_spring_boot.model.Station;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class BusCreateRequest {
     @NotNull(message = "vui long khong de trong")
     private String descriptions;
     @NotNull(message = "vui long khong de trong")
+    @Pattern(regexp = "A[0-9]{2}-[0-9]{4}" , message = "Please begin your submission with the code Axx-xxxx, x is number")
     private String licensePlate;
     @NotNull(message = "vui long khong de trong")
     private Integer capacity;

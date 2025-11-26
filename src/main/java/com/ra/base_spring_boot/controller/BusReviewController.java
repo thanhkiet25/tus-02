@@ -14,16 +14,17 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/bus-review")
+@RequestMapping("/api/v1/users/bus-review")
 public class BusReviewController {
     private final IBusReviewService busReviewService;
 
     @GetMapping
-    public ResponseEntity<?> findAllBusReviews(@PageableDefault(page = 0, size = 10, sort = "rating",direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<?> findAllBusReviews(@PageableDefault(page = 0, size = 10, sort = "rating",direction = Sort.Direction.DESC) Pageable pageable,
+                                               @RequestParam(required = false) Integer rating){
         return new ResponseEntity<>(ResponseWrapper.builder()
                 .status(HttpStatus.OK)
                 .code(HttpStatus.OK.value())
-                .data(busReviewService.findAllBusReviews(pageable))
+                .data(busReviewService.findAllBusReviews(pageable , rating))
                 .build(),HttpStatus.OK);
 
     }

@@ -39,6 +39,8 @@ order by r.rating desc , r.createdAt desc
     Page<BusReview> searchBusAndFilter(@Param("search") String search,
                                        @Param("filterBus") String filterBus,
                                        Pageable pageable);
-
+    @Query("select b from BusReview b " +
+            "where (:rating is null or b.rating = :rating)")
+    Page<BusReview> findAllBusReviews(Pageable pageable, @Param("rating") Integer rating);
 
 }

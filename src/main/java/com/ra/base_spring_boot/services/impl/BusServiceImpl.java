@@ -37,6 +37,9 @@ public class BusServiceImpl implements IBusService {
         if(busRepository.existsBusByBusName(busReqDto.getName())){
             throw new HttpConflict("duplicate name");
         }
+        if(busRepository.existsBusByLicensePlate(busReqDto.getLicensePlate())){
+            throw new HttpConflict("duplicate licensePlate");
+        }
         Bus bus = new Bus();
         bus.setBusName(busReqDto.getName());
         bus.setDescriptions(busReqDto.getDescriptions());
@@ -71,9 +74,12 @@ public class BusServiceImpl implements IBusService {
 
     @Override
     public BusResponse update(BusCreateRequest busCreateRequest, int id) {
-        Bus bus = busRepository.findById(id).orElseThrow(() -> new HttpNotFound("bus not found"));
+        Bus bus = busRepository.findById(id).orElseThrow(() -> new HttpNotFound("busId: " + id + " not found"));
         if(busRepository.existsBusByBusNameAndIdNot(busCreateRequest.getName(), id)) {
             throw new HttpConflict("duplicate name");
+        }
+        if(busRepository.existsBusByLicensePlateAndIdNot(busCreateRequest.getLicensePlate(), id)) {
+            throw new HttpConflict("duplicate LicensePlate");
         }
         bus.setBusName(busCreateRequest.getName());
         bus.setDescriptions(busCreateRequest.getDescriptions());
@@ -107,7 +113,7 @@ public class BusServiceImpl implements IBusService {
 
     @Override
     public void delete(int id) {
-        Bus bus = busRepository.findById(id).orElseThrow(() -> new HttpNotFound("id not found"));
+        Bus bus = busRepository.findById(id).orElseThrow(() -> new HttpNotFound("busId: " + id + " not found"));
     if(busRepository.hasRelatedSchedule(bus.getId()) || busRepository.hasRelatedReviews(bus.getId()) || busRepository.hasRelatedImage(bus.getId()) || busRepository.hasRelatedSeats(bus.getId())) {
         throw new HttpConflict ("Can not delete bus, please remove Schedule | Reviews | Image | Seats.");
     }
