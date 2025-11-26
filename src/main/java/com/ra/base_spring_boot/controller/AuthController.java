@@ -4,7 +4,10 @@ import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.req.FormLogin;
 import com.ra.base_spring_boot.dto.req.FormRegister;
 import com.ra.base_spring_boot.dto.resp.UserResponse;
+import com.ra.base_spring_boot.security.jwt.JwtTokenFilter;
 import com.ra.base_spring_boot.services.IAuthService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import java.net.URI;
 public class AuthController
 {
     private final IAuthService authService;
+    private final JwtTokenFilter jwtTokenFilter;
 
     /**
      * @param formLogin FormLogin
@@ -51,6 +55,17 @@ public class AuthController
                         .data(newUser)
                         .build()
         );
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest httpServlet){
+        String token = jwtTokenFilter.getTokenFromRequest(httpServlet);
+        if(token != null){
+            authService.logout(token);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("token khong hop le");
+        }
+        return ResponseEntity.ok().body("dang xuat thanh cong");
     }
 
 }

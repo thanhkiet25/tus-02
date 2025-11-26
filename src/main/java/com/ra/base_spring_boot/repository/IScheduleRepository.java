@@ -31,4 +31,5 @@ order by s.departureTime asc
             );
 
     Schedule findScheduleById(Integer id);
+
 }

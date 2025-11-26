@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,5 +19,6 @@ public class ScheduleServiceImpl implements IScheduleService {
     public List<SearchScheduleResponse> searchSchedule(Long fromId, Long toId, LocalDate date) {
         return scheduleRepository.searchSchedule(fromId, toId, date);
     }
+
 
 }

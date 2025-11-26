@@ -74,6 +74,7 @@ public class SecurityConfig
                                 .accessDeniedHandler(accessDenied)
                 )
                 .addFilterAfter(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .build();
     }
 

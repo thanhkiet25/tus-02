@@ -6,10 +6,12 @@ import com.ra.base_spring_boot.dto.resp.JwtResponse;
 import com.ra.base_spring_boot.dto.resp.UserResponse;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
+import com.ra.base_spring_boot.model.BlackListToken;
 import com.ra.base_spring_boot.model.Role;
 import com.ra.base_spring_boot.model.User;
 import com.ra.base_spring_boot.model.constants.RoleName;
 import com.ra.base_spring_boot.model.constants.UserStatus;
+import com.ra.base_spring_boot.repository.IBlackListToken;
 import com.ra.base_spring_boot.repository.IUserRepository;
 import com.ra.base_spring_boot.security.jwt.JwtProvider;
 import com.ra.base_spring_boot.security.principle.MyUserDetails;
@@ -24,6 +26,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +39,7 @@ public class AuthServiceImpl implements IAuthService
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final IBlackListToken iBlackListToken;
 
     @Override
     public UserResponse register(FormRegister formRegister)
@@ -62,6 +66,9 @@ public class AuthServiceImpl implements IAuthService
     @Override
     public JwtResponse login(FormLogin formLogin)
     {
+        //Xóa toàn bộ token đã logout trước khi login ngan
+        deleteTokenFromBlackList();
+
         Authentication authentication;
         try
         {
@@ -78,10 +85,44 @@ public class AuthServiceImpl implements IAuthService
             throw new HttpBadRequest("Your account is blocked");
         }
 
+
+        // Tạo token mới ngan
+        String newToken = jwtProvider.generateToken(userDetails.getUsername());
+
+
         return JwtResponse.builder()
                 .accessToken(jwtProvider.generateToken(userDetails.getUsername()))
                 .user(new UserResponse(userDetails.getUser()))
                 .build();
+    }
+
+    @Override
+    public BlackListToken logout(String token) {
+
+        if (token == null || token.trim().isEmpty()) {
+            throw new IllegalArgumentException("token is null or empty");
+        }
+        boolean isExists = iBlackListToken.existsByToken(token);
+        if (!isExists) {
+            BlackListToken blackListToken = new BlackListToken();
+            blackListToken.setToken(token);
+            blackListToken.setLogin(false);
+            blackListToken.setCreatedAt(LocalDateTime.now());
+            return iBlackListToken.save(blackListToken);
+        } else {
+            throw new RuntimeException("Token is already in blacklist");
+        }
+    }
+
+    @Override
+    public boolean isTokenInBlackList(String token) {
+        return iBlackListToken.existsByToken(token);
+    }
+
+    @Override
+    public void deleteTokenFromBlackList() {
+        iBlackListToken.deleteAllByIsLoginFalse();
+        System.out.println("Đã xóa toàn bộ các token có isLogin = false trong blackList");
     }
 
 
