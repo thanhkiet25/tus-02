@@ -14,4 +14,6 @@ public interface ISeatService {
     SeatResponse createSeat(SeatRequest seatRequest);
 
     void deleteSeat( int seatId);
+
+    SeatResponse findSeatById(int id);
 }

@@ -16,7 +16,7 @@ select  new com.ra.base_spring_boot.dto.resp.PopularBusReviewResponse(
     r.id,
     r.rating,
     r.review,
-    b.name,
+    b.busName,
     ds.name,
     arr.name,
     r.createdAt
@@ -34,8 +34,8 @@ order by r.rating desc , r.createdAt desc
     BusReview findBusReviewById(int id);
 
     @Query("select b from BusReview b where " +
-            "(:search is null or :search = '' or b.bus.name like concat('%' , :search, '%')) and " +
-            "(:filterBus is null or :filterBus = '' or b.bus.name like :filterBus)")
+            "(:search is null or :search = '' or b.bus.busName like concat('%' , :search, '%')) and " +
+            "(:filterBus is null or :filterBus = '' or b.bus.busName like :filterBus)")
     Page<BusReview> searchBusAndFilter(@Param("search") String search,
                                        @Param("filterBus") String filterBus,
                                        Pageable pageable);

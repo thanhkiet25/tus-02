@@ -8,6 +8,7 @@ import com.ra.base_spring_boot.model.BusCompany;
 import com.ra.base_spring_boot.model.Seat;
 import com.ra.base_spring_boot.services.IBusCompanyService;
 import com.ra.base_spring_boot.services.ISeatService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -62,4 +63,18 @@ public class AdminSeatController {
                         .build(),HttpStatus.OK
         );
     }
+
+    @GetMapping("/findById/{seatId}")
+    @Operation(summary = "get seat by Id", description = "get seat by Id")
+    public ResponseEntity<?> getSeatById(@PathVariable int seatId){
+        SeatResponse seatResponse = seatService.findSeatById(seatId);
+        return new ResponseEntity<>(
+                ResponseWrapper.builder()
+                        .status(HttpStatus.OK)
+                        .code(HttpStatus.OK.value())
+                        .data(seatResponse)
+                        .build(),HttpStatus.OK
+        );
+    }
+
 }

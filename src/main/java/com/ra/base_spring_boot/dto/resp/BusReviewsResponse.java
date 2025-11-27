@@ -18,7 +18,7 @@ public class BusReviewsResponse {
     private String review;
     private LocalDateTime createdAt;
     private int busId;
-    private String name;
+    private String busName;
 
     public BusReviewsResponse(BusReview busReview){
         this.busReviewId = busReview.getId();
@@ -26,6 +26,6 @@ public class BusReviewsResponse {
         this.review = busReview.getReview();
         this.createdAt = busReview.getCreatedAt();
         this.busId = busReview.getBus().getId();
-        this.name = busReview.getBus().getName();
+        this.busName = busReview.getBus().getBusName();
     };
 }

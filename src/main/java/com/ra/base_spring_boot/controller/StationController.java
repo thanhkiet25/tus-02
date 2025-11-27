@@ -17,7 +17,6 @@ public class StationController {
 
     private final IStationService stationService;
 
-
     @GetMapping
     public ResponseEntity<?> findAllAndSearch(
             @RequestParam(defaultValue = "") String search,

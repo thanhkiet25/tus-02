@@ -34,9 +34,11 @@ public class BusReviewServiceImpl implements IBusReviewService {
     //tra ve busReview
     @Override
     public Page<BusReviewsResponse> findAllSearchAndFilter(String search,String filterBus,Pageable pageable) {
+        String trimmedSearch = search.trim();
+        String  trimmedFilterBus = filterBus.trim();
+        Page<BusReview> list = busReviewRepository.searchBusAndFilter(trimmedSearch, trimmedFilterBus, pageable);
+        return list.map(BusReviewsResponse::new);
 
-        Page<BusReview> list = busReviewRepository.searchBusAndFilter(search, filterBus, pageable);
-       return list.map(BusReviewsResponse::new);
     }
 
     @Override

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class StationResponse {
-    private int id;
+    private Integer id;
     private String name;
     private String image;
     private String wallpaper;
@@ -21,7 +21,6 @@ public class StationResponse {
     private String location;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
 
     public StationResponse(Station station){
         this.id = station.getId();

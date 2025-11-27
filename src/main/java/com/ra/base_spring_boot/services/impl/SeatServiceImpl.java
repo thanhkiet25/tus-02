@@ -34,9 +34,10 @@ public class SeatServiceImpl implements ISeatService {
 
     @Override
     public Page<SeatListResponse> findAllByBusCompany(int busCompanyId, String searchBusName, Pageable pageable) {
+        String trimmedSearch = searchBusName.trim();
         BusCompany busCompany = busCompanyRepository.findById(busCompanyId).orElseThrow(() -> new HttpNotFound("Not found bus company id is " + busCompanyId));
         if (busCompany.getId() != null) {
-            return seatRepository.findAllByBus_BusCompany_IdAndBus_NameContaining(busCompanyId, searchBusName, pageable).map(SeatListResponse::new);
+            return seatRepository.findAllByBus_BusCompany_IdAndBus_BusNameContaining(busCompanyId, trimmedSearch, pageable).map(SeatListResponse::new);
         }
         return null;
     }
@@ -67,5 +68,11 @@ public class SeatServiceImpl implements ISeatService {
        }else {
            throw new HttpConflict("seat status is " + seat.getStatus() +" can not delete.");
        }
+    }
+
+    @Override
+    public SeatResponse findSeatById(int seatId) {
+        Seat seat = seatRepository.findById(seatId).orElseThrow(() -> new HttpNotFound("Not found seat id is " + seatId));
+        return new SeatResponse(seat);
     }
 }
