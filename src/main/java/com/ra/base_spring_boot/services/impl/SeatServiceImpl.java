@@ -68,4 +68,10 @@ public class SeatServiceImpl implements ISeatService {
            throw new HttpConflict("seat status is " + seat.getStatus() +" can not delete.");
        }
     }
+
+    @Override
+    public SeatResponse findSeatById(int seatId) {
+        Seat seat = seatRepository.findById(seatId).orElseThrow(() -> new HttpNotFound("Not found seat id is " + seatId));
+        return new SeatResponse(seat);
+    }
 }
