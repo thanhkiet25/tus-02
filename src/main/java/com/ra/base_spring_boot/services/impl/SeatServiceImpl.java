@@ -43,7 +43,7 @@ public class SeatServiceImpl implements ISeatService {
     }
     @Override
     public SeatResponse createSeat(SeatRequest seatRequest) {
-        if(seatRepository.existsSeatBySeatNumberAndBus_Id(seatRequest.getSeatNumber(),seatRequest.getBusId())){
+        if(seatRepository.existsSeatBySeatNumberAndBusId(seatRequest.getSeatNumber(),seatRequest.getBusId())){
             throw new HttpConflict("seat number and bus id already exist");
         }
         Seat seat = new Seat();

@@ -37,6 +37,16 @@ public class AdminStationController {
                 .data(stationService.findAllAndSearch(pageable, search))
                 .build());
     }
+    @GetMapping("/{id}")
+    @Operation(summary = "Get station detail", description = "Retrieve station details by ID")
+    public ResponseEntity<?> findStationById(@PathVariable int id){
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK)
+                .data(stationService.findStationById(id))
+                .build(), HttpStatus.OK);
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Create new station", description = "Upload images and create a new station")
     public ResponseEntity<?> createStation(@Valid @ModelAttribute StationCreateRequest request) {

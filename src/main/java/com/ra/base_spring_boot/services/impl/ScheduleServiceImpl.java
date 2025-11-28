@@ -3,7 +3,10 @@ import com.ra.base_spring_boot.dto.req.ScheduleCreateRequest;
 import com.ra.base_spring_boot.dto.req.ScheduleUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.ScheduleResponse;
 import com.ra.base_spring_boot.dto.resp.SearchScheduleResponse;
+import com.ra.base_spring_boot.dto.resp.SeatAvailabilityResponse;
 import com.ra.base_spring_boot.model.Schedule;
+import com.ra.base_spring_boot.model.Seat;
+import com.ra.base_spring_boot.model.constants.SeatStatus;
 import com.ra.base_spring_boot.repository.IScheduleRepository;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.Bus;
@@ -12,6 +15,7 @@ import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.model.constants.ScheduleStatus;
 import com.ra.base_spring_boot.repository.*;
+import com.ra.base_spring_boot.services.IBusService;
 import com.ra.base_spring_boot.services.IScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,15 +26,18 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements IScheduleService {
     private final IScheduleRepository scheduleRepository;
-    private final IScheduleRepository iScheduleRepository;
     private final IRouteRepository routeRepository;
     private final IBusRepository busRepository;
+    private final ISeatRepository seatRepository;
+    private final ITicketRepository ticketRepository;
 
     @Override
     public List<SearchScheduleResponse> searchSchedule(Long fromId, Long toId, LocalDate date) {
@@ -127,6 +134,27 @@ public class ScheduleServiceImpl implements IScheduleService {
         ScheduleResponse scheduleResponse = new ScheduleResponse(schedule);
         scheduleRepository.delete(schedule);
         return scheduleResponse;
+    }
+
+    @Override
+    public List<SeatAvailabilityResponse> getSeatsByScheduleId(Integer scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new HttpNotFound("Schedule not found"));
+
+        List<Seat> allSeats = seatRepository.findAllByBusId(schedule.getBus().getId());
+
+        List<Integer> bookedSeatIds = ticketRepository.findBookedSeatIdsByScheduleId(scheduleId);
+
+        return allSeats.stream().map(seat -> {
+            boolean isBooked = bookedSeatIds.contains(seat.getId());
+
+            return SeatAvailabilityResponse.builder()
+                    .seatId(seat.getId())
+                    .seatNumber(seat.getSeatNumber())
+                    .price(schedule.getRoute().getPrice() + seat.getPriceForSeatType())
+                    .status(isBooked ? SeatStatus.BOOKED : SeatStatus.AVAILABLE)
+                    .build();
+        }).collect(Collectors.toList());
     }
 
 

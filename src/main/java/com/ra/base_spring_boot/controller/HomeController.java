@@ -25,7 +25,8 @@ public class HomeController {
     private final IBusReviewService busReviewService;
     private final IStationService stationService;
     private final IScheduleService scheduleService;
-    @GetMapping("/popularRouter")
+
+    @GetMapping("/popular-routes")
     public ResponseEntity<?> getPopularRoutes(@RequestParam(defaultValue = "5") int limit) {
         List<PopularRoutesResponse> routes = routeService.getPopularRoutes(limit);
         return  ResponseEntity.ok().body(
@@ -47,7 +48,7 @@ public class HomeController {
                 .build()
         );
     }
-    @GetMapping("/popularBusCompany")
+    @GetMapping("/popular-bus-companies")
     public ResponseEntity<?> getPopularBusCompany(@RequestParam(defaultValue = "5") int limit) {
         List<PopularBusCompanyResponse> popularBusCompany = busCompanyService.getPopularBusCompanyDTO(limit);
         return  ResponseEntity.ok().body(
@@ -58,7 +59,7 @@ public class HomeController {
                 .build()
         );
     }
-    @GetMapping("/popularBusReview")
+    @GetMapping("/popular-bus-reviews")
     public ResponseEntity<?> getPopularBusReview(@RequestParam(defaultValue = "5") int limit) {
         List<PopularBusReviewResponse> popularBusReview = busReviewService.getBusReviews(limit);
         return  ResponseEntity.ok().body(
@@ -70,7 +71,7 @@ public class HomeController {
         );
     }
 
-    @GetMapping("/popularStation")
+    @GetMapping("/popular-stations")
     public ResponseEntity<?> getPopularStation(@RequestParam(defaultValue = "5") int limit) {
         List<PopularStationResponse> popularStation = stationService.getPopularStations(limit);
         return  ResponseEntity.ok().body(
@@ -82,12 +83,12 @@ public class HomeController {
         );
     }
 
-    @GetMapping("/searchSchedule")
+    @GetMapping("/search-schedules")
     public ResponseEntity<?> getSearchSchedule
             (@RequestParam(required = false ) Long fromId,
              @RequestParam(required = false ) Long toId,
              @RequestParam(required = false)
-             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
              LocalDate date ){
                 List<SearchScheduleResponse> searchSchedule = scheduleService.searchSchedule(fromId, toId, date);
                 return  ResponseEntity.ok().body(
