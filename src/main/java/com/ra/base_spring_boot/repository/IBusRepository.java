@@ -1,9 +1,11 @@
 package com.ra.base_spring_boot.repository;
+
 import com.ra.base_spring_boot.model.Bus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,9 +18,26 @@ import org.springframework.stereotype.Repository;
 
         boolean existsBusByBusNameAndIdNot(String busName, Integer busId);
 
-         boolean existsByBusName(String busName);
+//         boolean existsByBusName(String busName);
+//
+//         boolean existsByBusNameAndIdNot(String busName, Integer id);
+//
+//        boolean existsBusByNameAndIdNot(String busName, Integer busId);
 
-         boolean existsByBusNameAndIdNot(String busName, Integer id);
+        Bus findBusesById(int busId);
+
+        @Query("select count(b) > 0 from Schedule b where b.bus.id = :busId")
+        boolean hasRelatedSchedule(@Param("busId") Integer busId);
+
+        @Query("select count(s) > 0 from Seat s where s.bus.id = :busId")
+        boolean hasRelatedSeats(@Param("busId") Integer busId);
+
+        @Query("select count(b) > 0 from BusImage b where b.bus.id = :busId")
+        boolean hasRelatedImage(@Param("busId") Integer busId);
+
+        @Query("select count(b) > 0 from BusReview b where b.bus.id = :busId")
+        boolean hasRelatedReviews(@Param("busId") Integer busId);
+
 
     }
 

@@ -7,6 +7,8 @@ import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.*;
 import com.ra.base_spring_boot.repository.IBusRepository;
+import com.ra.base_spring_boot.repository.IScheduleRepository;
+import com.ra.base_spring_boot.repository.ISeatRepository;
 import com.ra.base_spring_boot.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +28,9 @@ public class BusServiceImpl implements IBusService {
 
     private final BusCompanyServiceImpl busCompanyService;
 
-    private final IStationService stationService;
+    private final IScheduleRepository  scheduleRepository;
+
+
 
     @Override
     public BusResponse save(BusCreateRequest busReqDto) {
@@ -102,15 +106,18 @@ public class BusServiceImpl implements IBusService {
     }
 
     @Override
-    public String delete(int id) {
+    public void delete(int id) {
         Bus bus = busRepository.findById(id).orElseThrow(() -> new HttpNotFound("id not found"));
-        busRepository.delete(bus);
-        return "xoa thanh cong";
+    if(busRepository.hasRelatedSchedule(bus.getId()) || busRepository.hasRelatedReviews(bus.getId()) || busRepository.hasRelatedImage(bus.getId()) || busRepository.hasRelatedSeats(bus.getId())) {
+        throw new HttpConflict ("Can not delete bus, please remove Schedule | Reviews | Image | Seats.");
+    }
+        busRepository.deleteById(id);
     }
 
     @Override
     public Page<BusListResponse> findAllByPage(Pageable pageable, String search) {
-        Page<Bus> list = busRepository.findAllAndSearch(pageable, search);
+        String trimmedSearch = search.trim();
+        Page<Bus> list = busRepository.findAllAndSearch(pageable, trimmedSearch);
         return list.map(e -> BusListResponse.builder()
                 .id(e.getId())
                 .name(e.getBusName())
@@ -120,7 +127,24 @@ public class BusServiceImpl implements IBusService {
                 .build());
     }
 
+    @Override
+    public BusResponse findBusResponseById(int id) {
+        Bus bus =  busRepository.findById(id).orElseThrow(() -> new HttpNotFound("bus id: " + id + " not found"));
+        return BusResponse.builder()
+                .id(bus.getId())
+                .name(bus.getBusName())
+                .descriptions(bus.getDescriptions())
+                .capacity(bus.getCapacity())
+                .busImage(bus.getImages().stream().map(BusImage::getImageUrl).collect(Collectors.joining(",")))
+                .busCompanyName(bus.getBusCompany().getCompanyName())
+                .licensePlate(bus.getLicensePlate())
+                .build();
+    }
 
+    @Override
+    public Bus findBusById(int id) {
+        return busRepository.findById(id).orElseThrow(() -> new HttpNotFound("bus id: " + id + " not found"));
+    }
 
 
 }

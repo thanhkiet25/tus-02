@@ -87,4 +87,14 @@ public class JwtProvider
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public String getSubjectFromToken(String token){
+        return Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+
+
 }

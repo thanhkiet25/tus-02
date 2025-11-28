@@ -34,9 +34,10 @@ public class SeatServiceImpl implements ISeatService {
 
     @Override
     public Page<SeatListResponse> findAllByBusCompany(int busCompanyId, String searchBusName, Pageable pageable) {
+        String trimmedSearch = searchBusName.trim();
         BusCompany busCompany = busCompanyRepository.findById(busCompanyId).orElseThrow(() -> new HttpNotFound("Not found bus company id is " + busCompanyId));
         if (busCompany.getId() != null) {
-            return seatRepository.findAllByBus_BusCompany_IdAndBus_BusNameContaining(busCompanyId, searchBusName, pageable).map(SeatListResponse::new);
+            return seatRepository.findAllByBus_BusCompany_IdAndBus_BusNameContaining(busCompanyId, trimmedSearch, pageable).map(SeatListResponse::new);
         }
         return null;
     }

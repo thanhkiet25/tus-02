@@ -50,10 +50,20 @@ public class AminBusController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBus(@PathVariable int id){
+        busService.delete(id);
         return new ResponseEntity<>(ResponseWrapper.builder()
                 .code(HttpStatus.OK.value())
                 .status(HttpStatus.OK)
-                .data(busService.delete(id))
+                .data("Delete bus successfully")
+                .build(),HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBus(@PathVariable int id){
+        return new ResponseEntity<>(ResponseWrapper.builder()
+                .status(HttpStatus.OK)
+                .code(HttpStatus.OK.value())
+                .data(busService.findBusResponseById(id))
                 .build(),HttpStatus.OK);
     }
 }
