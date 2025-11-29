@@ -15,5 +15,12 @@ public class SearchScheduleResponse {
 private Integer scheduleId;
 private String descriptionStation;
 private String arrivalStation;
+private String busCompanyName;
+private String busName;
+private String busImage;
+private Integer capacity;
+private Integer availableSeat;
+private Double price;
 private LocalDateTime departureTime;
+private LocalDateTime arrivalTime;
 }

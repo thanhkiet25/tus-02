@@ -3,6 +3,7 @@ import com.ra.base_spring_boot.dto.req.ScheduleUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.SearchScheduleResponse;
 import com.ra.base_spring_boot.dto.req.ScheduleCreateRequest;
 import com.ra.base_spring_boot.dto.resp.ScheduleResponse;
+import com.ra.base_spring_boot.dto.resp.SeatAvailabilityResponse;
 import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,5 +20,8 @@ public interface IScheduleService {
     ScheduleResponse updateSchedule(int id, ScheduleUpdateRequest scheduleUpdateRequest);
 
     ScheduleResponse deleteSchedule(int id);
+
+
+    List<SeatAvailabilityResponse> getSeatsByScheduleId(Integer scheduleId);
 
 }

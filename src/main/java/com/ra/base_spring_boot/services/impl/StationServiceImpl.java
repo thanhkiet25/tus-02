@@ -27,6 +27,10 @@ public class StationServiceImpl implements IStationService {
 
     @Override
     public Page<StationListResponse> findAllAndSearch(Pageable pageable, String search) {
+        if (search != null) {
+            search = search.trim();
+        }
+
         Page<Station> listStation =stationRepository.findAllAndSearch(search, pageable);
         return listStation.map(e -> StationListResponse.builder()
                 .id(e.getId())
@@ -56,9 +60,6 @@ public class StationServiceImpl implements IStationService {
             throw new HttpConflict("Station name '" + request.getName().trim() + "' already exists");
         }
 
-        if (request.getLocation() == null || request.getLocation().trim().isEmpty()) {
-            throw new HttpBadRequest("Location cannot be empty");
-        }
         Station station = new Station();
         station.setName(request.getName().trim());
         station.setLocation(request.getLocation().trim());
@@ -86,32 +87,52 @@ public class StationServiceImpl implements IStationService {
         Station station = stationRepository.findById(id)
                 .orElseThrow(() -> new HttpNotFound("Station not found with id: " + id));
 
+        boolean isModified = false;
+
         if (request.getName() != null && !request.getName().trim().isEmpty()) {
             String newName = request.getName().trim();
             if (!station.getName().equals(newName)) {
                 if (stationRepository.existsByNameAndIdNot(newName, id)) {
                     throw new HttpConflict("Station name '" + newName + "' already exists");
                 }
+                station.setName(newName);
+                isModified = true;
             }
-            station.setName(newName);
+
         }
 
         if (request.getLocation() != null && !request.getLocation().trim().isEmpty()) {
-            station.setLocation(request.getLocation().trim());
+            String newLocation = request.getLocation().trim();
+            if (!station.getLocation().equals(newLocation)) {
+                station.setLocation(newLocation);
+                isModified = true;
+            }
         }
 
         if (request.getDescriptions() != null) {
-            station.setDescriptions(request.getDescriptions().trim());
+            String newDesc = request.getDescriptions().trim();
+            String oldDesc = station.getDescriptions() != null ? station.getDescriptions() : "";
+
+            if (!oldDesc.equals(newDesc)) {
+                station.setDescriptions(newDesc);
+                isModified = true;
+            }
         }
 
         if (request.getImageFile() != null && !request.getImageFile().isEmpty()) {
             String imageUrl = cloudinaryService.upload(request.getImageFile());
             station.setImage(imageUrl);
+            isModified = true;
         }
 
         if (request.getWallpaperFile() != null && !request.getWallpaperFile().isEmpty()) {
             String wallpaperUrl = cloudinaryService.upload(request.getWallpaperFile());
             station.setWallpaper(wallpaperUrl);
+            isModified = true;
+        }
+
+        if (!isModified) {
+            throw new HttpBadRequest("No changes detected.");
         }
 
         Station updatedStation = stationRepository.save(station);
