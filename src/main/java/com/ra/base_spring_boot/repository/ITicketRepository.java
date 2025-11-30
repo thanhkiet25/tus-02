@@ -3,6 +3,8 @@ package com.ra.base_spring_boot.repository;
 import com.ra.base_spring_boot.dto.resp.BookingHistoryResponse;
 import com.ra.base_spring_boot.model.Ticket;
 import com.ra.base_spring_boot.model.constants.TicketStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +17,25 @@ public interface ITicketRepository extends JpaRepository<Ticket,Integer> {
     SELECT t FROM Ticket t 
     JOIN t.payment p 
     JOIN p.user u WHERE t.id = :ticketId AND u.phone = :phone""")
-    Optional<Ticket> searchTicket(@Param("ticketId") Integer ticketId, @Param("phone") String phone);
+    Optional<Ticket> searchTicket(@Param("ticketId") Integer id, @Param("phone") String phone);
+
+    @Query("""
+    SELECT t FROM Ticket t
+    WHERE (:keyword IS NULL 
+        
+           OR LOWER(t.schedule.route.departureStation.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+           OR LOWER(t.schedule.route.arrivalStation.name) LIKE LOWER(CONCAT('%', :keyword, '%'))
+           OR LOWER(t.seat.seatNumber) LIKE LOWER(CONCAT('%', :keyword, '%')))
+    """)
+    Page<Ticket> getAllAndSearchTicket(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("""
+    SELECT t FROM Ticket t
+    WHERE t.schedule.bus.busCompany.id = :companyId
+    """)
+    Page<Ticket> getTicketByCompany(@Param("companyId") Integer companyId, Pageable pageable);
+
+    Page<Ticket> getTicketByStatus(TicketStatus status, Pageable pageable);
 
 
     // Đặt vé và lịch sử đặt vé (nhinty)

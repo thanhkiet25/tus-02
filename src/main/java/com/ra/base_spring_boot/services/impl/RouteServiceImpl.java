@@ -6,6 +6,7 @@ import com.ra.base_spring_boot.dto.resp.RouteResponse;
 
 import com.ra.base_spring_boot.dto.req.RouteRequest;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
+import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 
 import com.ra.base_spring_boot.model.Route;
@@ -45,6 +46,11 @@ public class RouteServiceImpl implements IRouteService {
 
    @Override
     public Page<RouteResponse> findAllAndSearchRoute(String keyword, int page, int size, String sortBy, String direction) {
+       if (keyword == null || keyword.trim().isEmpty()) {
+           keyword = null;
+       }else {
+           keyword = keyword.trim().toLowerCase();
+       }
         Sort sort = direction.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
                 : Sort.by(sortBy).ascending();
@@ -65,13 +71,14 @@ public class RouteServiceImpl implements IRouteService {
     // create route
     @Override
     public RouteResponse createRoute(RouteRequest routeReq) {
+        //KT route ton tai
         Optional<Route> duplicateRoute = routeRepository.findDuplicateRoute(
                 routeReq.getDepartureStationId(),
                 routeReq.getArrivalStationId(),
                 null
         );
         if(duplicateRoute.isPresent()){
-            throw new HttpBadRequest("Route already exists");
+            throw new HttpConflict("Route already exists");
         }
 
         Route route = new Route();
@@ -94,15 +101,6 @@ public class RouteServiceImpl implements IRouteService {
    public RouteResponse updateRoute(int id, RouteRequest req) {
        Route route = routeRepository.findById(id)
                .orElseThrow(() -> new HttpNotFound("Route not found with id: " + id));
-       // KT route da ton tai
-       Optional<Route> duplicateRoute = routeRepository.findDuplicateRoute(
-               req.getDepartureStationId(),
-               req.getArrivalStationId(),
-               id
-       );
-       if(duplicateRoute.isPresent()){
-           throw new HttpBadRequest("Route already exists");
-       }
        //update gia tri
        route.setPrice(req.getPrice());
        route.setDuration(req.getDuration());
@@ -127,7 +125,24 @@ public class RouteServiceImpl implements IRouteService {
 public void deleteRoute(int id) {
     Route route = routeRepository.findById(id)
             .orElseThrow(() -> new HttpNotFound("Route not found with id: " + id));
+    if (routeRepository.existsScheduleByRouteId(id)){
+        throw new HttpConflict("Cannot delete the route because it is associated with existing schedules.");
+    }
     routeRepository.delete(route);
 }
+
+    public RouteResponse getRouteById (int id){
+       Route route = routeRepository.findById(id).orElseThrow(()-> new HttpNotFound("Route not found with id: " + id));
+        return RouteResponse.builder()
+                .id(route.getId())
+                .price(route.getPrice())
+                .duration(route.getDuration())
+                .distance(route.getDistance())
+                .departureStation(route.getDepartureStation().getName())
+                .arrivalStation(route.getArrivalStation().getName())
+                .createdAt(route.getCreatedAt())
+                .updatedAt(route.getUpdatedAt())
+                .build();
+   }
 
 }

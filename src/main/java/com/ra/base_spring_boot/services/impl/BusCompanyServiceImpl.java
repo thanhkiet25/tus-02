@@ -48,7 +48,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
 
     public BusCompanyResponse getCompanyById(int id) {
         BusCompany company = busCompanyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy nhà xe với id:" + id));
+                .orElseThrow(() -> new HttpNotFound("Bus Company not found with id: " + id));
 
         return BusCompanyResponse.builder()
                 .id(company.getId())
