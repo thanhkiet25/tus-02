@@ -18,13 +18,10 @@ import org.springframework.stereotype.Repository;
 
         boolean existsBusByBusNameAndIdNot(String busName, Integer busId);
 
-//         boolean existsByBusName(String busName);
-//
-//         boolean existsByBusNameAndIdNot(String busName, Integer id);
-//
-//        boolean existsBusByNameAndIdNot(String busName, Integer busId);
+        boolean existsBusByLicensePlate(String licensePlate);
 
-        Bus findBusesById(int busId);
+        boolean existsBusByLicensePlateAndIdNot(String licensePlate, Integer busId);
+
 
         @Query("select count(b) > 0 from Schedule b where b.bus.id = :busId")
         boolean hasRelatedSchedule(@Param("busId") Integer busId);

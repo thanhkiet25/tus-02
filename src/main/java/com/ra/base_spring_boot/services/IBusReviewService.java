@@ -16,7 +16,7 @@ public interface IBusReviewService {
     //tra ve busReview
     Page<BusReviewsResponse> findAllSearchAndFilter( String search,String filterBus ,Pageable pageable);
 
-    Page<BusReviewsResponse> findAllBusReviews(Pageable pageable);
+    Page<BusReviewsResponse> findAllBusReviews(Pageable pageable , Integer search);
 
     BusReviewsResponse saveBusReview(BusReviewCreateResponse busReviewCreateResponse);
 
