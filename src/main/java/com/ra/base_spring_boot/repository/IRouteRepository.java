@@ -55,6 +55,10 @@ or lower(r.departureStation.name) like lower(concat('%', :keyword,'%') )
             @Param("arrivalId") Integer arrivalId,
             @Param("excludeId") Integer excludeId
     );
+   
+    @Query("select count(s) > 0 from Schedule s where s.route.id = :routeId")
+    boolean existsScheduleByRouteId(@Param("routeId") Integer routeId);
+
 
 }
 

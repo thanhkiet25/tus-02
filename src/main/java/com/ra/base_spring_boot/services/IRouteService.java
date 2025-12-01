@@ -22,7 +22,7 @@ public interface IRouteService {
  List<PopularRoutesResponse> getPopularRoutes(int limit);
 
  // Hien thi danh sach cac route
- Page<RouteResponse> findAllAndSearchRoute(@Param("keyword") String keyword, int page, int size, String sortBy, String direction);
+ Page<RouteResponse> findAllAndSearchRoute( String keyword, int page, int size, String sortBy, String direction);
  // Them moi route
  RouteResponse createRoute(RouteRequest req);
 

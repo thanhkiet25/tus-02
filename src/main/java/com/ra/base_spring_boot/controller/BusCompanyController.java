@@ -21,7 +21,7 @@ public class BusCompanyController {
     @GetMapping("/companies")
     public ResponseEntity<ResponseWrapper<?>> getCompanies(
             @RequestParam(defaultValue = "0")int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "10") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
         PageResponse<BusCompanyResponse> result = busCompanyService.getCompanyNames(pageable);
@@ -36,8 +36,7 @@ public class BusCompanyController {
     }
     @GetMapping("/companies/{id}")
     public ResponseEntity<ResponseWrapper<?>> getCompanyById(@PathVariable int id){
-        try{
-            BusCompanyResponse response = busCompanyService.getCompanyById(id);
+        BusCompanyResponse response = busCompanyService.getCompanyById(id);
             return ResponseEntity.ok(
                     ResponseWrapper.builder()
                             .status(HttpStatus.OK)
@@ -45,16 +44,6 @@ public class BusCompanyController {
                             .data(response)
                             .build()
             );
-
-        }catch (RuntimeException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ResponseWrapper.builder()
-                            .status(HttpStatus.BAD_REQUEST)
-                            .code(400)
-                            .data(e.getMessage())
-                            .build()
-                    );
-        }
     }
 
 }

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface IBusCompanyRepository extends JpaRepository<BusCompany,Integer> {
+public interface  IBusCompanyRepository extends JpaRepository<BusCompany,Integer> {
     @Query("""
 select new com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse(
   bc.id,

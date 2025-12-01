@@ -20,7 +20,7 @@ public class AdminRouteController {
     public ResponseEntity<?> getAllRoutes(
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
@@ -63,6 +63,17 @@ public class AdminRouteController {
                 .status(HttpStatus.OK)
                 .code(HttpStatus.OK.value())
                 .data("Deleted")
+                .build(),
+                HttpStatus.OK);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseWrapper<?>> getRouteById(@PathVariable int id) {
+        RouteResponse route = routeService.getRouteById(id);
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .status(HttpStatus.OK)
+                .code(HttpStatus.OK.value())
+                .data(route)
                 .build(),
                 HttpStatus.OK);
     }
