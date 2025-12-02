@@ -39,30 +39,18 @@ public class ScheduleServiceImpl implements IScheduleService {
     @Override
     public List<SearchScheduleResponse> searchSchedule(Long fromId, Long toId, LocalDate date) {
         if (fromId == null || toId == null) {
-            throw  new HttpBadRequest("fromId and toId can't be null!");
+            throw new HttpBadRequest("fromId and toId can't be null!");
         }
         if (date == null) {
-            throw  new HttpBadRequest("date can't be null!");
+            throw new HttpBadRequest("date can't be null!");
         }
-      List<Object[]> searchSchedule = scheduleRepository.searchSchedule(fromId,toId,date);
-        if (searchSchedule.isEmpty()) {
-            throw  new HttpNotFound("schedule not found!");
+
+        List<SearchScheduleResponse> results = scheduleRepository.searchSchedule(fromId, toId, date);
+
+        if (results.isEmpty()) {
+            throw new HttpNotFound("Schedule not found!");
         }
-      return searchSchedule.stream()
-              .map(row ->SearchScheduleResponse.builder()
-                      .scheduleId(((Number) row[0]).intValue())
-                      .descriptionStation((String) row[1])
-                      .arrivalStation((String) row[2])
-                      .busCompanyName((String) row[3])
-                      .busName((String) row[4])
-                      .busImage((String) row[5])
-                      .capacity(((Number) row[6]).intValue())
-                      .availableSeat(((Number) row[7]).intValue())
-                      .price(((Number) row[8]).doubleValue())
-                      .departureTime(((java.sql.Timestamp) row[9]).toLocalDateTime())
-                      .arrivalTime(((java.sql.Timestamp) row[10]).toLocalDateTime())
-                      .build()
-              ).toList();
+        return results;
     }
 
     @Override

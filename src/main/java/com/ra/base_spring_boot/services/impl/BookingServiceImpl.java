@@ -126,6 +126,9 @@ public class BookingServiceImpl implements IBookingService {
     public List<BookingHistoryResponse> getHistory(TicketStatus status, String companyName) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+        if (companyName != null) {
+            companyName = companyName.trim();
+        }
         return ticketRepository.findHistory(user.getId(), status, companyName);
     }
 }

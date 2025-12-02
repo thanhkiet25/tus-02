@@ -12,32 +12,33 @@ import java.util.List;
 import java.util.Objects;
 
 public interface IScheduleRepository extends JpaRepository<Schedule,Integer> {
-    @Query(value="""
-        SELECT
-            s.id as schedule_id,
-            ds.name as departure_station,
-            arr.name as arrival_station,
-            bc.company_name as company_name,
-            b.name as bus_name,
-            bc.image as bus_company_image,
+    @Query("""
+        SELECT new com.ra.base_spring_boot.dto.resp.SearchScheduleResponse(
+            s.id,
+            ds.name,
+            arr.name,
+            bc.companyName,
+            b.busName,
+            bc.image,
             b.capacity,
-            s.available_seat,
+            s.availableSeat,
             r.price,
-            s.departure_time,
-            s.arrival_time
-        FROM schedules s
-        JOIN routes r on s.route_id = r.id
-        JOIN stations ds on r.departure_station_id = ds.id
-        JOIN stations arr on r.arrival_station_id = arr.id
-        JOIN buses b on s.bus_id = b.id
-        JOIN bus_companies bc on b.company_id = bc.id
+            s.departureTime,
+            s.arrivalTime
+        )
+        FROM Schedule s
+        JOIN s.route r
+        JOIN s.bus b
+        JOIN b.busCompany bc
+        JOIN r.departureStation ds
+        JOIN r.arrivalStation arr
         WHERE (:fromId IS NULL OR ds.id = :fromId)
         AND   (:toId IS NULL OR arr.id = :toId)
-        AND   (:date IS NULL OR DATE(s.departure_time) = :date)
+        AND   (:date IS NULL OR CAST(s.departureTime AS DATE) = :date)
         AND   s.status = 'AVAILABLE'
-        ORDER BY s.departure_time ASC
-    """,nativeQuery = true)
-    List<Object[]> searchSchedule(
+        ORDER BY s.departureTime ASC
+    """)
+    List<SearchScheduleResponse> searchSchedule(
             @Param("fromId") Long fromId,
             @Param("toId") Long toId,
             @Param("date") LocalDate date
