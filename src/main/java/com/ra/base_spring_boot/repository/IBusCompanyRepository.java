@@ -35,4 +35,6 @@ order by count(t.id) desc
     boolean existsByCompanyNameAndIdNot(String search,Integer id);
 
     BusCompany findBusCompanyById(Integer id);
+
+
 }

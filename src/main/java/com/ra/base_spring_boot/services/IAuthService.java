@@ -6,6 +6,9 @@ import com.ra.base_spring_boot.dto.resp.JwtResponse;
 import com.ra.base_spring_boot.dto.resp.UserResponse;
 import com.ra.base_spring_boot.model.BlackListToken;
 
+import java.util.List;
+import java.util.Map;
+
 public interface IAuthService
 {
 
@@ -18,5 +21,7 @@ public interface IAuthService
     boolean isTokenInBlackList(String token);
 
     void deleteTokenFromBlackList();
+
+
 
 }
