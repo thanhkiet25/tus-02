@@ -21,6 +21,7 @@ public interface IScheduleService {
 
     ScheduleResponse deleteSchedule(int id);
 
+    ScheduleResponse getScheduleById(int id);
 
     List<SeatAvailabilityResponse> getSeatsByScheduleId(Integer scheduleId);
 

@@ -2,13 +2,9 @@ package com.ra.base_spring_boot.services.impl;
 import com.ra.base_spring_boot.dto.resp.PopularRoutesResponse;
 import com.ra.base_spring_boot.dto.resp.RouteListResponse;
 import com.ra.base_spring_boot.dto.resp.RouteResponse;
-
-
-import com.ra.base_spring_boot.dto.req.RouteRequest;
-import com.ra.base_spring_boot.exception.HttpBadRequest;
+import com.ra.base_spring_boot.dto.req.RouteCreateRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
-
 import com.ra.base_spring_boot.model.Route;
 import com.ra.base_spring_boot.model.Station;
 import com.ra.base_spring_boot.repository.IRouteRepository;
@@ -20,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -69,9 +64,9 @@ public class RouteServiceImpl implements IRouteService {
        ));
     }
     // create route
+    //KT route ton tai
     @Override
-    public RouteResponse createRoute(RouteRequest routeReq) {
-        //KT route ton tai
+    public RouteResponse createRoute(RouteCreateRequest routeReq) {
         Optional<Route> duplicateRoute = routeRepository.findDuplicateRoute(
                 routeReq.getDepartureStationId(),
                 routeReq.getArrivalStationId(),
@@ -98,13 +93,14 @@ public class RouteServiceImpl implements IRouteService {
     }
    // update route
    @Override
-   public RouteResponse updateRoute(int id, RouteRequest req) {
+   public RouteResponse updateRoute(int id, RouteCreateRequest req) {
        Route route = routeRepository.findById(id)
                .orElseThrow(() -> new HttpNotFound("Route not found with id: " + id));
        //update gia tri
-       route.setPrice(req.getPrice());
-       route.setDuration(req.getDuration());
-       route.setDistance(req.getDistance());
+
+       route.setPrice(req.getPrice()!=null?req.getPrice():route.getPrice());
+       route.setDuration(req.getDuration()!=null?req.getDuration():route.getDuration());
+       route.setDistance(req.getDistance()!=null?req.getDistance():route.getDistance());
 
        // Update khóa ngoại
        Station departure = stationRepository.findById(req.getDepartureStationId())

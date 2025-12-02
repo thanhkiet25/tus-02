@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +37,20 @@ public class AdminScheduleController {
                      .build()
       );
    }
-   @PostMapping("/create")
-    public ResponseEntity<ResponseWrapper<?>> createSchedule(@Valid @RequestBody ScheduleCreateRequest scheduleRequest) {
+   @GetMapping("findById/{id}")
+   public ResponseEntity<?> getScheduleById(@PathVariable Integer id) {
+      ScheduleResponse scheduleResponse = scheduleService.getScheduleById(id);
+      return ResponseEntity.status(HttpStatus.OK).body(
+              ResponseWrapper.<ScheduleResponse>builder()
+              .status(HttpStatus.OK)
+              .code(HttpStatus.OK.value())
+              .data(scheduleResponse)
+              .build()
+      );
+   }
+
+   @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseWrapper<?>> createSchedule(@Valid @ModelAttribute ScheduleCreateRequest scheduleRequest) {
        ScheduleResponse schedule = scheduleService.createSchedule(scheduleRequest);
        return ResponseEntity.status(HttpStatus.CREATED).body(
                ResponseWrapper.builder()
@@ -47,8 +60,8 @@ public class AdminScheduleController {
                        .build()
        );
    }
-   @PostMapping("/update/{id}")
-    public ResponseEntity<ResponseWrapper<?>> updateSchedule( @Valid @PathVariable int id, @RequestBody ScheduleUpdateRequest  scheduleRequest) {
+   @PutMapping(value = "/update/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseWrapper<?>> updateSchedule( @PathVariable int id,@Valid  @ModelAttribute ScheduleUpdateRequest  scheduleRequest) {
        ScheduleResponse schedule = scheduleService.updateSchedule(id, scheduleRequest);
        return ResponseEntity.status(HttpStatus.OK).body(
                ResponseWrapper.builder()

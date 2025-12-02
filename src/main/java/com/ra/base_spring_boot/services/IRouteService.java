@@ -4,7 +4,7 @@ import com.ra.base_spring_boot.dto.resp.RouteListResponse;
 import com.ra.base_spring_boot.dto.resp.RouteResponse;
 
 
-import com.ra.base_spring_boot.dto.req.RouteRequest;
+import com.ra.base_spring_boot.dto.req.RouteCreateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -24,10 +24,10 @@ public interface IRouteService {
  // Hien thi danh sach cac route
  Page<RouteResponse> findAllAndSearchRoute( String keyword, int page, int size, String sortBy, String direction);
  // Them moi route
- RouteResponse createRoute(RouteRequest req);
+ RouteResponse createRoute(RouteCreateRequest req);
 
  // Cập nhật route
- RouteResponse updateRoute(int id, RouteRequest req);
+ RouteResponse updateRoute(int id, RouteCreateRequest req);
 
  // Xóa route
  void deleteRoute(int id);

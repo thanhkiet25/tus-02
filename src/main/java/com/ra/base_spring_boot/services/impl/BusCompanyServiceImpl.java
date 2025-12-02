@@ -5,6 +5,8 @@ import com.ra.base_spring_boot.dto.resp.PageResponse;
 import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
 import com.ra.base_spring_boot.converter.BusCompanyConverter;
 import com.ra.base_spring_boot.dto.req.BusCompanyCreateRequest;
+import com.ra.base_spring_boot.dto.resp.StatisticBusCompany;
+import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.BusCompany;
@@ -81,8 +83,9 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
     }
 
     @Override
-    public BusCompany findById(Integer id) {
-        return busCompanyRepository.findById(id).orElseThrow(()-> new HttpNotFound("Bus Company Not Found"));
+    public BusCompanyResponse getById(Integer id) {
+        BusCompany busCompany= busCompanyRepository.findById(id).orElseThrow(()-> new HttpNotFound("Bus Company Not Found"));
+    return new  BusCompanyResponse(busCompany);
     }
 
     @Override
@@ -107,6 +110,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
 @Override
     public BusCompanyResponse updateBusCompany(int id, BusCompanyUpdateRequest busCompanyRequest) {
         BusCompany busCompany = busCompanyRepository.findById(id).orElseThrow(() -> new HttpNotFound("Bus Company Not Found"));
+        boolean isModified = false;
         String rawName = busCompanyRequest.getCompanyName();
         if(rawName!=null) {
             String newName = rawName.trim();
@@ -117,19 +121,30 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
                     }
                 }
                 busCompany.setCompanyName(newName);
+                isModified = true;
             }
         }
 
         if(busCompanyRequest.getImageFile()!=null && !busCompanyRequest.getImageFile().isEmpty()){
             String images = cloudinaryService.upload(busCompanyRequest.getImageFile());
             busCompany.setImage(images);
+             isModified = true;
         }
         if(StringUtils.hasText(busCompanyRequest.getDescription())) {
             busCompany.setDescriptions(busCompanyRequest.getDescription());
+            isModified = true;
+        }
+        if(!isModified) {
+            throw new HttpBadRequest("No changes detected");
         }
         BusCompany busCompanyUpdated = busCompanyRepository.save(busCompany);
         return new BusCompanyResponse(busCompanyUpdated);
 
+    }
+
+    @Override
+    public BusCompany findBusCompanyById(int id) {
+        return busCompanyRepository.findById(id).orElseThrow(() -> new HttpNotFound("Bus Company Not Found"));
     }
 
     @Override
@@ -142,6 +157,17 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
        busCompanyRepository.delete(busCompany);
        return busCompanyResponse;
 
+    }
+
+    @Override
+    public Page<StatisticBusCompany> getStatisticBusCompany(Pageable pageable) {
+        return busCompanyRepository.getStatisticBusCompany(pageable)
+                .map(rows -> new StatisticBusCompany(
+                        ((Number) rows[0]).intValue(),
+                        ((String) rows[1]),
+                        ((Number) rows[2]).intValue(),
+                        ((Number) rows[3]).intValue()
+                ));
     }
 
 

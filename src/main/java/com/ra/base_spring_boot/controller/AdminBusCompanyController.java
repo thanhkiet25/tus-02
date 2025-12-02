@@ -23,7 +23,7 @@ public class AdminBusCompanyController {
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "company_name") String sortBy,
+            @RequestParam(defaultValue = "companyName") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
             ){
        Page<BusCompanyResponse> busCompany = busCompanyService.findBusCompanyByNameAndGetAllAndSort(search,page,size,sortBy,direction);
@@ -48,6 +48,17 @@ public class AdminBusCompanyController {
         );
     }
 
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<?> findBusCompany(@PathVariable Integer id){
+        BusCompanyResponse busCompany = busCompanyService.getById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseWrapper.<BusCompanyResponse>builder()
+                .status(HttpStatus.OK)
+                .code(HttpStatus.OK.value())
+                .data(busCompany)
+                .build()
+        );
+    }
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ResponseWrapper<?>> updateBusCompany(@PathVariable Integer id,@ModelAttribute BusCompanyUpdateRequest busCompanyRequest){
         BusCompanyResponse update = busCompanyService.updateBusCompany(id,busCompanyRequest);

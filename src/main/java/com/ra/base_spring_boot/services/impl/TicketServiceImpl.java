@@ -1,5 +1,5 @@
 package com.ra.base_spring_boot.services.impl;
-
+import com.ra.base_spring_boot.dto.resp.StatisticTicketActiveResponse;
 import com.ra.base_spring_boot.dto.resp.TicketResponse;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.Ticket;
@@ -9,14 +9,14 @@ import com.ra.base_spring_boot.services.ITicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
+import com.ra.base_spring_boot.services.IRouteService;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class TicketServiceImpl implements ITicketService {
     private final ITicketRepository ticketRepository;
-
+    private final IRouteService routeService;
     @Override
     public TicketResponse searchTicket(Integer id, String phone) {
         Ticket ticket = ticketRepository.searchTicket(id, phone)
@@ -56,5 +56,14 @@ public class TicketServiceImpl implements ITicketService {
 
 
 
+
+    @Override
+    public StatisticTicketActiveResponse getTicketActive() {
+       Object result = ticketRepository.getStatisticTicketActive();
+       Object[] row = (Object[]) result;
+       Integer booked = ((Number) row[0]).intValue();
+       Integer cancelled = ((Number) row[1]).intValue();
+       return new StatisticTicketActiveResponse(booked, cancelled);
+    }
 
 }

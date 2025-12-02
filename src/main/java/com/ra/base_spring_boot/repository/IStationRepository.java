@@ -40,4 +40,21 @@ order by count(t.id) desc
 """)
     List<PopularStationResponse> getPopularStations(Pageable pageable);
 
+    @Query(value = """
+       select
+           s.id,
+           s.name as station_name,
+           count(t.id) as total_passengers
+       from stations s
+       join routes r
+           on r.departure_station_id = s.id
+           or r.arrival_station_id = s.id
+       join schedules sch on sch.route_id = r.id
+       join tickets t on t.schedule_id = sch.id
+       where t.status = 'BOOKED'
+       group by s.id,s.name
+       order by total_passengers desc
+       """,nativeQuery = true)
+    List<Object[]> getStatisticStation();
+
 }
