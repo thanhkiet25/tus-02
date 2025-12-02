@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class SearchScheduleResponse {
 private Integer scheduleId;
-private String descriptionStation;
+private String departureStation;
 private String arrivalStation;
 private String busCompanyName;
 private String busName;
