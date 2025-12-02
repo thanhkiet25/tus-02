@@ -5,6 +5,7 @@ import com.ra.base_spring_boot.dto.req.StationUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.PopularStationResponse;
 import com.ra.base_spring_boot.dto.resp.StationListResponse;
 import com.ra.base_spring_boot.dto.resp.StationResponse;
+import com.ra.base_spring_boot.dto.resp.StatisticStationResponse;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
@@ -132,7 +133,7 @@ public class StationServiceImpl implements IStationService {
         }
 
         if (!isModified) {
-            throw new HttpBadRequest("No changes detected.");
+                throw new HttpBadRequest("No changes detected.");
         }
 
         Station updatedStation = stationRepository.save(station);
@@ -152,6 +153,18 @@ public class StationServiceImpl implements IStationService {
 
         stationRepository.delete(station);
         return response;
+    }
+
+    @Override
+    public List<StatisticStationResponse> getStatisticStations() {
+        List<Object[]> results = stationRepository.getStatisticStation();
+        return results.stream().map(row->
+                new StatisticStationResponse(
+                        ((Number) row[0]).intValue(),
+                        (String) row[1],
+                        ((Number) row[2]).intValue()
+                )
+        ).toList();
     }
 }
 

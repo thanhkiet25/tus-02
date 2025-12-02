@@ -1,7 +1,7 @@
 package com.ra.base_spring_boot.controller;
 
 import com.ra.base_spring_boot.dto.ResponseWrapper;
-import com.ra.base_spring_boot.dto.req.RouteRequest;
+import com.ra.base_spring_boot.dto.req.RouteCreateRequest;
 import com.ra.base_spring_boot.dto.resp.RouteResponse;
 import com.ra.base_spring_boot.services.impl.RouteServiceImpl;
 import jakarta.validation.Valid;
@@ -34,7 +34,7 @@ public class AdminRouteController {
                 HttpStatus.OK);
     }
     @PostMapping("/add")
-    public ResponseEntity<?> createRoute(@Valid @RequestBody RouteRequest req) {
+    public ResponseEntity<?> createRoute(@Valid @RequestBody RouteCreateRequest req) {
         return new ResponseEntity<>(ResponseWrapper
                 .builder()
                 .status(HttpStatus.CREATED)
@@ -45,7 +45,7 @@ public class AdminRouteController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateRoute( @PathVariable int id, @Valid @RequestBody RouteRequest req) {
+    public ResponseEntity<?> updateRoute( @PathVariable int id, @Valid @RequestBody RouteCreateRequest req) {
         return new  ResponseEntity<>(ResponseWrapper
                 .builder()
                 .status(HttpStatus.OK)

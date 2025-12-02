@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @Transactional
 public interface IPaymentProviderRepository extends JpaRepository<PaymentProvider,Integer> {
@@ -19,4 +21,5 @@ public interface IPaymentProviderRepository extends JpaRepository<PaymentProvide
 
     @Query("SELECT COUNT(p) > 0 FROM Payment p WHERE p.paymentProvider.id = :paymentProviderId ")
     boolean hasRelatedPayment(@Param("paymentProviderId") Integer paymentProviderId);
+
 }

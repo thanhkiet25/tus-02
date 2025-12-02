@@ -4,6 +4,7 @@ import com.ra.base_spring_boot.dto.req.StationCreateRequest;
 import com.ra.base_spring_boot.dto.req.StationUpdateRequest;
 import com.ra.base_spring_boot.dto.resp.StationListResponse;
 import com.ra.base_spring_boot.dto.resp.StationResponse;
+import com.ra.base_spring_boot.dto.resp.StatisticStationResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.ra.base_spring_boot.dto.resp.PopularStationResponse;
@@ -22,6 +23,8 @@ public interface IStationService {
     StationResponse updateStation(Integer id, StationUpdateRequest request);
 
     StationResponse deleteStation(Integer id);
+
+    List<StatisticStationResponse> getStatisticStations();
 }
 
 

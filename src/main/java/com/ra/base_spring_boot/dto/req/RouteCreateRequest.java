@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class RouteRequest {
+public class RouteCreateRequest {
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be greater than 0")
     private Double price;

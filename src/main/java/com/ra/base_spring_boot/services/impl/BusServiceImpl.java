@@ -8,7 +8,6 @@ import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.*;
 import com.ra.base_spring_boot.repository.IBusRepository;
 import com.ra.base_spring_boot.repository.IScheduleRepository;
-import com.ra.base_spring_boot.repository.ISeatRepository;
 import com.ra.base_spring_boot.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +25,7 @@ public class BusServiceImpl implements IBusService {
 
     private final CloudinaryServiceImpl cloudinaryService;
 
-    private final BusCompanyServiceImpl busCompanyService;
+    private final IBusCompanyService busCompanyService;
 
     private final IScheduleRepository  scheduleRepository;
 
@@ -45,7 +44,7 @@ public class BusServiceImpl implements IBusService {
         bus.setDescriptions(busReqDto.getDescriptions());
         bus.setLicensePlate(busReqDto.getLicensePlate());
         bus.setCapacity(busReqDto.getCapacity());
-        bus.setBusCompany(busCompanyService.findById(busReqDto.getBusCompanyId()));
+        bus.setBusCompany(busCompanyService.findBusCompanyById(busReqDto.getBusCompanyId()));
         bus.setCreatedAt(LocalDateTime.now());
 
         //upload anh
@@ -85,7 +84,7 @@ public class BusServiceImpl implements IBusService {
         bus.setDescriptions(busCreateRequest.getDescriptions());
         bus.setLicensePlate(busCreateRequest.getLicensePlate());
         bus.setCapacity(busCreateRequest.getCapacity());
-        bus.setBusCompany(busCompanyService.findById(busCreateRequest.getBusCompanyId()));
+        bus.setBusCompany(busCompanyService.findBusCompanyById(busCreateRequest.getBusCompanyId()));
         bus.setCreatedAt(LocalDateTime.now());
         if(busCreateRequest.getBusImage() != null && !busCreateRequest.getBusImage().isEmpty()){
             for (MultipartFile file : busCreateRequest.getBusImage()){

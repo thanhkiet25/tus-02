@@ -1,4 +1,5 @@
 package com.ra.base_spring_boot.repository;
+
 import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
 import com.ra.base_spring_boot.model.BusCompany;
 import org.springframework.data.domain.Page;
@@ -36,5 +37,18 @@ order by count(t.id) desc
 
     BusCompany findBusCompanyById(Integer id);
 
+
+    @Query(value = """
+      SELECT
+      bc.id as company_id,
+      bc.company_name as company_name,
+      sum(case when br.rating >= 3 then 1 else 0 end) as positive_review,
+      sum(case when br.rating <3 then 1 else 0 end) as negative_review
+      from bus_companies bc
+      join buses b on bc.id = b.company_id
+      join bus_reviews br on br.bus_id = b.id
+      group by bc.id,bc.company_name
+    """,nativeQuery = true)
+    Page<Object[]> getStatisticBusCompany(Pageable pageable);
 
 }

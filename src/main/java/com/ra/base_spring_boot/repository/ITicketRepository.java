@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -142,4 +140,11 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
                                             @Param("year") int year);
 
 
+    @Query(value = """
+     select
+      SUM(CASE WHEN t.status = 'BOOKED' THEN 1 ELSE 0 END ) AS booked_count,
+      SUM(CASE WHEN t.status = 'CANCELLED' THEN 1 ELSE 0 END ) AS cancelled_count
+      FROM tickets t
+    """,nativeQuery = true)
+    Object getStatisticTicketActive();
 }
