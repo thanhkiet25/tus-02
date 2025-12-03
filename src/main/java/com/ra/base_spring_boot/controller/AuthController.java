@@ -4,6 +4,8 @@ import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.req.FormLogin;
 import com.ra.base_spring_boot.dto.req.FormRegister;
 import com.ra.base_spring_boot.dto.resp.UserResponse;
+import com.ra.base_spring_boot.model.BlackListToken;
+import com.ra.base_spring_boot.repository.IBlackListToken;
 import com.ra.base_spring_boot.security.jwt.JwtTokenFilter;
 import com.ra.base_spring_boot.services.IAuthService;
 import jakarta.servlet.http.HttpServlet;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -23,6 +26,7 @@ public class AuthController
 {
     private final IAuthService authService;
     private final JwtTokenFilter jwtTokenFilter;
+    private final IBlackListToken  blackListToken;
 
     /**
      * @param formLogin FormLogin
@@ -61,11 +65,22 @@ public class AuthController
     public ResponseEntity<?> logout(HttpServletRequest httpServlet){
         String token = jwtTokenFilter.getTokenFromRequest(httpServlet);
         if(token != null){
-            authService.logout(token);
+            if(blackListToken.existsByToken(token)){
+                // Kiểm tra nếu token đã trong blacklist
+                return ResponseEntity.ok().body("You have logged out");
+            }
+            // Thêm token vào blacklist
+            BlackListToken listToken = BlackListToken.builder()
+                    .token(token)
+                    .createdAt(LocalDateTime.now())
+                    .isLogin(false)   //Đánh dấu là đã logout
+                    .build();
+
+            blackListToken.save(listToken);
+            return ResponseEntity.ok().body("Log out successfully");
         }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("token khong hop le");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token");
         }
-        return ResponseEntity.ok().body("dang xuat thanh cong");
     }
 
 }
