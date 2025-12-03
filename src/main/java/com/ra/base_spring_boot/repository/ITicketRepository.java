@@ -82,12 +82,12 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
             @Param("status") TicketStatus status,
             @Param("companyName") String companyName
     );
-// lấy danh sách vé theo tuần
+// lấy danh sách vé theo ngay
     @Query("SELECT t FROM Ticket t WHERE t.schedule.route.id = :routeId " +
             " AND t.schedule.bus.busCompany.companyName like :busCompanyName " +
             "AND t.status = 'BOOKED' AND t.payment.status = 'COMPLETED' " +
             "AND  t.payment.createdAt >= :startDate AND t.payment.createdAt <= :endDate")
-    List<Ticket> findTicketsByRouteAndBusCompanyByWeek(@Param("routeId") Integer routeId,
+    List<Ticket> findTicketsByRouteAndBusCompanyByDate(@Param("routeId") Integer routeId,
                                                        @Param("busCompanyName") String busCompanyName,
                                                        @Param("startDate") LocalDateTime startDate,
                                                        @Param("endDate") LocalDateTime endDate);
@@ -101,6 +101,7 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
                                                         @Param("month") int month,
                                                         @Param("year") int year);
 
+
 // lấy danh sách vé theo năm
     @Query("SELECT t FROM Ticket t WHERE t.schedule.route.id = :routeId " +
             " AND t.schedule.bus.busCompany.companyName like :busCompanyName " +
@@ -110,7 +111,8 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
                                                        @Param("busCompanyName") String busCompanyName,
                                                        @Param("year") int year);
 
-    //tính tổng tiền theo tuần
+
+    //tính tổng tiền theo ngay
     @Query("SELECT SUM(t.price) FROM Ticket t WHERE t.schedule.route.id = :routeId " +
             " AND t.schedule.bus.busCompany.companyName like :busCompanyName " +
             "AND t.status = 'BOOKED' AND t.payment.status = 'COMPLETED' " +

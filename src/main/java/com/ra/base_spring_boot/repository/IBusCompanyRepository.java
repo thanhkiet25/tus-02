@@ -51,4 +51,6 @@ order by count(t.id) desc
     """,nativeQuery = true)
     Page<Object[]> getStatisticBusCompany(Pageable pageable);
 
+    BusCompany findByCompanyName(String busCompanyName);
+
 }

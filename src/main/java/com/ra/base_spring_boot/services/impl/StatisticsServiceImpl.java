@@ -6,6 +6,7 @@ import com.ra.base_spring_boot.dto.resp.StatisticsLoyalCustomerResponse;
 import com.ra.base_spring_boot.dto.resp.StatisticsNewCustomerResponse;
 import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
+import com.ra.base_spring_boot.model.BusCompany;
 import com.ra.base_spring_boot.model.Ticket;
 import com.ra.base_spring_boot.model.User;
 import com.ra.base_spring_boot.repository.IBusCompanyRepository;
@@ -14,10 +15,12 @@ import com.ra.base_spring_boot.repository.ITicketRepository;
 import com.ra.base_spring_boot.repository.IUserRepository;
 import com.ra.base_spring_boot.services.IStatisticsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,16 +52,19 @@ public class StatisticsServiceImpl implements IStatisticsService {
         if (!routeRepository.existsById(routeId)) {
             throw new HttpNotFound("routeId not found");
         }
-        if(!routeRepository.existsRouteInBusCompanyName(routeId, trimmedBusCompanyName)) {
+        if (!routeRepository.existsRouteInBusCompanyName(routeId, trimmedBusCompanyName)) {
             throw new HttpConflict("Bus company name not exists route ID");
         }
 
         if (month < 1 || month > 12) {
             throw new HttpConflict("month must be between 1 and 12");
         }
+        BusCompany busCompany = busCompanyRepository.findByCompanyName(trimmedBusCompanyName);
+        LocalDateTime createdAt = busCompany.getCreatedAt();
+        int minYear = createdAt.getYear();
         int currentYear = java.time.Year.now().getValue();
-        if (year <= 2000 || year > currentYear) {
-            throw new HttpConflict("year must be between 2000 and "+currentYear);
+        if (year < minYear || year > currentYear) {
+            throw new HttpConflict("year must be between "+ minYear +" and " + currentYear);
         }
         tickets = ticketRepository.findTicketsByRouteAndBusCompanyByMonth(routeId, trimmedBusCompanyName, month, year);
         totalRevenue = ticketRepository.calculateTotalRevenueByMonthRange(routeId, trimmedBusCompanyName, month, year);
@@ -88,11 +94,15 @@ public class StatisticsServiceImpl implements IStatisticsService {
         if (!routeRepository.existsById(routeId)) {
             throw new HttpNotFound("routeId not found");
         }
-        if(!routeRepository.existsRouteInBusCompanyName(routeId, trimmedBusCompanyName)) {
+        if (!routeRepository.existsRouteInBusCompanyName(routeId, trimmedBusCompanyName)) {
             throw new HttpConflict("Bus company name not exists route ID");
         }
-        if (year <= 2000 || year > 2025) {
-            throw new HttpConflict("year must be between 2000 and 2025");
+        BusCompany busCompany = busCompanyRepository.findByCompanyName(trimmedBusCompanyName);
+        LocalDateTime createdAt = busCompany.getCreatedAt();
+        int minYear = createdAt.getYear();
+        int currentYear = java.time.Year.now().getValue();
+        if (year < minYear || year > currentYear) {
+            throw new HttpConflict("year must be between "+ minYear +" and " + currentYear);
         }
         tickets = ticketRepository.findTicketsByRouteAndBusCompanyByYear(routeId, trimmedBusCompanyName, year);
         totalRevenue = ticketRepository.calculateTotalRevenueByYearRange(routeId, trimmedBusCompanyName, year);
@@ -111,23 +121,8 @@ public class StatisticsServiceImpl implements IStatisticsService {
     }
 
 
-    // Phương thức để tính ngày bắt đầu và kết thúc của tuần
-    public LocalDateTime[] getStartAndEndDateOfCurrentWeek() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime startDate = today.with(DayOfWeek.MONDAY); // Ngày thứ Hai
-        LocalDateTime endDate = today.with(DayOfWeek.SUNDAY);   // Ngày Chủ Nhật
-        return new LocalDateTime[]{startDate, endDate};
-    }
-
-    // Phương thức để tính doanh thu cho tuần chứa ngày cụ thể
-    public Double calculateWeeklyRevenue(Integer routeId, String busCompanyName) {
-        LocalDateTime[] dates = getStartAndEndDateOfCurrentWeek();
-        return ticketRepository.calculateTotalRevenueByDateRange(routeId, busCompanyName, dates[0], dates[1]);
-    }
-
-
     @Override
-    public RevenueStatisticsResponse getRevenueStatisticsByWeek(Integer routeId, String busCompanyName) {
+    public RevenueStatisticsResponse getRevenueStatisticsForDate(Integer routeId, String busCompanyName, LocalDate startDate, LocalDate endDate) {
         String trimmedBusCompanyName = busCompanyName.trim();
         if (!busCompanyRepository.existsByCompanyName(trimmedBusCompanyName)) {
             throw new HttpNotFound("busCompanyName not found");
@@ -138,10 +133,21 @@ public class StatisticsServiceImpl implements IStatisticsService {
         if(!routeRepository.existsRouteInBusCompanyName(routeId, trimmedBusCompanyName)) {
             throw new HttpConflict("Bus company name not exists route ID");
         }
-        LocalDateTime[] dates = getStartAndEndDateOfCurrentWeek();
-        List<Ticket> tickets = ticketRepository.findTicketsByRouteAndBusCompanyByWeek(
-                routeId, busCompanyName, dates[0], dates[1]);
-        Double totalRevenue = calculateWeeklyRevenue(routeId, trimmedBusCompanyName);
+        if(startDate.isAfter(endDate)) {
+            throw new HttpConflict("start date must be before end date");
+        }
+        LocalDate today = LocalDate.now();
+
+        if (endDate.isAfter(today)) {
+            throw new HttpConflict("endDate cannot be after today");
+        }
+
+        // Convert LocalDate → LocalDateTime
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+        List<Ticket> tickets = ticketRepository.findTicketsByRouteAndBusCompanyByDate(
+                routeId, busCompanyName, startDateTime, endDateTime);
+        Double totalRevenue = ticketRepository.calculateTotalRevenueByDateRange(routeId, trimmedBusCompanyName, startDateTime, endDateTime);
         List<RevenueDetailResponse> details = new ArrayList<>();
         int countTickets = tickets.size();
         for (

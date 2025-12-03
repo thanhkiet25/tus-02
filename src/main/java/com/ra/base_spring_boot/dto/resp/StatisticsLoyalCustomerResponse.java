@@ -3,6 +3,7 @@ package com.ra.base_spring_boot.dto.resp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 @AllArgsConstructor

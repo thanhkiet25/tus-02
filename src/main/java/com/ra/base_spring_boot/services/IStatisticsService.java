@@ -4,6 +4,7 @@ import com.ra.base_spring_boot.dto.resp.RevenueStatisticsResponse;
 import com.ra.base_spring_boot.dto.resp.StatisticsLoyalCustomerResponse;
 import com.ra.base_spring_boot.dto.resp.StatisticsNewCustomerResponse;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +14,7 @@ public interface IStatisticsService {
 
     RevenueStatisticsResponse getRevenueStatisticsByRouteAndBusCompanyForYear(Integer routeId, String busCompanyName, Integer year);
 
-    RevenueStatisticsResponse getRevenueStatisticsByWeek(Integer routeId, String busCompanyName);
-
-    LocalDateTime[] getStartAndEndDateOfCurrentWeek();
-
-    Double calculateWeeklyRevenue(Integer routeId, String busCompanyName);
+    RevenueStatisticsResponse getRevenueStatisticsForDate(Integer routeId, String busCompanyName, LocalDate startDate, LocalDate endDate);
 
     StatisticsNewCustomerResponse getNewCustomerStatistics();
 
