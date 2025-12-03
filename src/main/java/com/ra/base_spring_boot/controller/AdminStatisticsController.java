@@ -23,12 +23,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin/statistics")
-public class StatisticsController {
+public class AdminStatisticsController {
     private final IBusCompanyService busCompanyService;
     private final ITicketService ticketService;
     private final IPaymentService paymentService;
@@ -67,13 +69,15 @@ public class StatisticsController {
                 , HttpStatus.OK);
     }
 
-    @GetMapping("/revenue-by-current-week")
-    @Operation(summary = "revenue by current week", description = "statistics revenue by current week with route id and bus company name")
+    @GetMapping("/revenue-by-date")
+    @Operation(summary = "revenue by date", description = "statistics revenue by date with route id and bus company name")
     public ResponseEntity<?> revenueStatisticsByCurrentWeek(
             @RequestParam Integer routeId,
-            @RequestParam String busCompanyName
-    ) {
-        RevenueStatisticsResponse response = statisticsService.getRevenueStatisticsByWeek(routeId, busCompanyName);
+            @RequestParam String busCompanyName,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate
+            ) {
+        RevenueStatisticsResponse response = statisticsService.getRevenueStatisticsForDate(routeId, busCompanyName, startDate, endDate);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
                         .status(HttpStatus.OK)
