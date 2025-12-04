@@ -86,14 +86,26 @@ public class AuthServiceImpl implements IAuthService
 
 
         // Tạo token mới ngan
-        String newToken = jwtProvider.generateToken(userDetails.getUsername());
+//        String newToken = jwtProvider.generateToken(userDetails.getUsername());
 
+        //duyen refresh token
+        // Tạo access + refresh token
+        String accessToken = jwtProvider.generateToken(userDetails.getUsername());
+        String refreshToken = jwtProvider.generateRefreshToken(userDetails.getUsername());
 
         return JwtResponse.builder()
-                .accessToken(jwtProvider.generateToken(userDetails.getUsername()))
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)     //  TRẢ VỀ REFRESH TOKEN
                 .user(new UserResponse(userDetails.getUser()))
                 .build();
     }
+
+
+
+//        return JwtResponse.builder()
+//                .accessToken(jwtProvider.generateToken(userDetails.getUsername()))
+//                .user(new UserResponse(userDetails.getUser()))
+//                .build();
 
     @Override
     public BlackListToken logout(String token) {

@@ -65,9 +65,9 @@ public class JwtTokenFilter extends OncePerRequestFilter
                     new ObjectMapper().writeValue(response.getOutputStream(), errors);
                     return;
                 }
-
-            // Kiểm tra token expired chỉ với endpoint cần bảo vệ
-                if (!isAuthEndpoint) {
+                //refresh token
+               boolean isRefreshEndpoint = request.getRequestURI().equals("/api/v1/refresh/");
+                if (!isAuthEndpoint && !isRefreshEndpoint) {
                     Date expiration = jwtProvider.extractExpiration(token);
                     if (expiration.before(new Date())) {
                         SecurityContextHolder.clearContext();
@@ -75,6 +75,17 @@ public class JwtTokenFilter extends OncePerRequestFilter
                         return;
                     }
                 }
+
+
+                // Kiểm tra token expired chỉ với endpoint cần bảo vệ
+//                if (!isAuthEndpoint) {
+//                    Date expiration = jwtProvider.extractExpiration(token);
+//                    if (expiration.before(new Date())) {
+//                        SecurityContextHolder.clearContext();
+//                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired");
+//                        return;
+//                    }
+//                }
 
             }
         }
