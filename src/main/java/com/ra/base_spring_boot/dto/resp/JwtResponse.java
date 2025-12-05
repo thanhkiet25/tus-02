@@ -14,6 +14,8 @@ public class JwtResponse
 {
     private String accessToken;
     private final String type = "Bearer";
+    //refresh token
+    private String refreshToken;
     @JsonIgnoreProperties({"password"})
     private UserResponse user;
 }

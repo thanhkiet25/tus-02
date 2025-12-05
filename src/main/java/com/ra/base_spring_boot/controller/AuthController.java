@@ -6,6 +6,7 @@ import com.ra.base_spring_boot.dto.req.FormRegister;
 import com.ra.base_spring_boot.dto.resp.UserResponse;
 import com.ra.base_spring_boot.model.BlackListToken;
 import com.ra.base_spring_boot.repository.IBlackListToken;
+import com.ra.base_spring_boot.security.jwt.JwtProvider;
 import com.ra.base_spring_boot.security.jwt.JwtTokenFilter;
 import com.ra.base_spring_boot.services.IAuthService;
 import jakarta.servlet.http.HttpServlet;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -27,6 +29,7 @@ public class AuthController
     private final IAuthService authService;
     private final JwtTokenFilter jwtTokenFilter;
     private final IBlackListToken  blackListToken;
+    private final JwtProvider jwtProvider;
 
     /**
      * @param formLogin FormLogin
@@ -82,6 +85,35 @@ public class AuthController
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token");
         }
     }
+
+    //refresh token
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> req) {
+        String refreshToken = req.get("refreshToken");
+
+        try {
+            // Giải mã refresh token
+            String username = jwtProvider.extractUsername(refreshToken);
+
+            // Tạo access token mới
+            String newAccessToken = jwtProvider.generateToken(username);
+
+            return ResponseEntity.ok(
+                    ResponseWrapper.builder()
+                            .status(HttpStatus.OK)
+                            .code(200)
+                            .data(Map.of(
+                                    "accessToken", newAccessToken,
+                                    "refreshToken", refreshToken
+                            ))
+                            .build()
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid refresh token");
+        }
+    }
+
 
 }
 

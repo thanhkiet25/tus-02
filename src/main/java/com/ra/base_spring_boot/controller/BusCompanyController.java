@@ -6,6 +6,7 @@ import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
 import com.ra.base_spring_boot.dto.resp.PageResponse;
 import com.ra.base_spring_boot.services.impl.BusCompanyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,31 +20,32 @@ public class BusCompanyController {
     private BusCompanyServiceImpl busCompanyService;
 
     @GetMapping("/companies")
-    public ResponseEntity<ResponseWrapper<?>> getCompanies(
+    public ResponseEntity<?> getCompanies(
             @RequestParam(defaultValue = "0")int page,
             @RequestParam(defaultValue = "10") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        PageResponse<BusCompanyResponse> result = busCompanyService.getCompanyNames(pageable);
-        ResponseWrapper<?> response = ResponseWrapper
-                .builder()
-                .status(HttpStatus.OK)
-                .code(200)
-                .data(result)
-                .build();
-        return ResponseEntity.ok(response);
-
+        Page<BusCompanyListResponse> result = busCompanyService.getCompanyNames(pageable);
+        return new ResponseEntity<>(
+                ResponseWrapper.builder()
+                        .code(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .data(result)
+                        .build(),
+                HttpStatus.OK
+        );
     }
     @GetMapping("/companies/{id}")
-    public ResponseEntity<ResponseWrapper<?>> getCompanyById(@PathVariable int id){
+    public ResponseEntity<?> getCompanyById(@PathVariable int id){
         BusCompanyResponse response = busCompanyService.getCompanyById(id);
-            return ResponseEntity.ok(
-                    ResponseWrapper.builder()
-                            .status(HttpStatus.OK)
-                            .code(200)
-                            .data(response)
-                            .build()
-            );
+        return new ResponseEntity<>(
+                ResponseWrapper.builder()
+                        .code(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .data(response)
+                        .build(),
+                HttpStatus.OK
+        );
     }
 
 }

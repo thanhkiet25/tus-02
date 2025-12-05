@@ -20,15 +20,22 @@ public class TicketServiceImpl implements ITicketService {
     @Override
     public TicketResponse searchTicket(Integer id, String phone) {
         Ticket ticket = ticketRepository.searchTicket(id, phone)
-                .orElseThrow(() -> new HttpNotFound("Ticket not found."));
+                .orElseThrow(() -> new HttpNotFound("Ticket not found. " ));
 
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .departureTime(ticket.getDepartureTime())
                 .arrivalTime(ticket.getArrivalTime())
+                .departureStationName(ticket.getSchedule().getRoute().getDepartureStation().getName())
+                .arrivalStationName(ticket.getSchedule().getRoute().getArrivalStation().getName())
+                .busCompanyName(ticket.getSchedule().getBus().getBusCompany().getCompanyName())
+                .busName(ticket.getSchedule().getBus().getBusName())
+                .seatNumber(ticket.getSeat().getSeatNumber())
                 .seatType(ticket.getSeatType())
                 .price(ticket.getPrice())
                 .status(ticket.getStatus())
+                .scheduleId(ticket.getSchedule().getId())
+                .seatId(ticket.getSeat().getId())
                 .createdAt(ticket.getCreatedAt())
                 .updatedAt(ticket.getUpdatedAt())
                 .build();

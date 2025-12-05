@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -15,11 +17,15 @@ public class BusCompanyResponse {
     private String companyName;
     private String companyImage;
     private String description;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public BusCompanyResponse(BusCompany busCompany) {
         this.id = busCompany.getId();
         this.companyName = busCompany.getCompanyName();
         this.companyImage=busCompany.getImage();
         this.description=busCompany.getDescriptions();
+        this.createdAt=busCompany.getCreatedAt();
+        this.updatedAt=busCompany.getUpdatedAt();
     }
 }

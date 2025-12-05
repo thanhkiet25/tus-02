@@ -1,11 +1,8 @@
 package com.ra.base_spring_boot.services.impl;
 import com.ra.base_spring_boot.dto.req.BusCompanyUpdateRequest;
-import com.ra.base_spring_boot.dto.resp.BusCompanyResponse;
-import com.ra.base_spring_boot.dto.resp.PageResponse;
-import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
+import com.ra.base_spring_boot.dto.resp.*;
 import com.ra.base_spring_boot.converter.BusCompanyConverter;
 import com.ra.base_spring_boot.dto.req.BusCompanyCreateRequest;
-import com.ra.base_spring_boot.dto.resp.StatisticBusCompany;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
 import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
@@ -30,20 +27,8 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
     @Autowired
     private CloudinaryServiceImpl cloudinaryService;
 
-    public PageResponse<BusCompanyResponse> getCompanyNames(Pageable pageable) {
-        Page<BusCompanyResponse> page = busCompanyRepository.findAll(pageable)
-                .map(company -> BusCompanyResponse
-                        .builder()
-                        .id(company.getId())
-                        .companyName(company.getCompanyName())
-                        .build()
-                );
-        return PageResponse
-                .<BusCompanyResponse>builder()
-                .data(page.getContent())
-                .currentPage(page.getNumber())
-                .totalElements(page.getTotalElements())
-                .build();
+    public Page<BusCompanyListResponse> getCompanyNames(Pageable pageable) {
+        return busCompanyRepository.findAll(pageable).map(BusCompanyListResponse::new);
     }
 
 
@@ -51,13 +36,7 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
     public BusCompanyResponse getCompanyById(int id) {
         BusCompany company = busCompanyRepository.findById(id)
                 .orElseThrow(() -> new HttpNotFound("Bus Company not found with id: " + id));
-
-        return BusCompanyResponse.builder()
-                .id(company.getId())
-                .companyName(company.getCompanyName())
-                .companyImage(company.getImage())
-                .description(company.getDescriptions())
-                .build();
+        return new  BusCompanyResponse(company);
     }
 
     public List<PopularBusCompanyResponse> getPopularBusCompanyDTO(int limit) {
