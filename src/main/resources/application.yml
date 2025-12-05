@@ -6,6 +6,15 @@ spring:
     username:
     password:
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: mailatoi88@gmail.com
+    password: ofcwzoimkgznmwxr
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
   jooq:
     sql-dialect: org.hibernate.dialect.MySQL8Dialect
   jpa:

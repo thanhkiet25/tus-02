@@ -54,4 +54,6 @@ public class User extends BaseObject
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private Set<Payment> payments = new HashSet<>();
+
+    private boolean enabled = true;
 }
