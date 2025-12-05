@@ -1,17 +1,7 @@
 package com.ra.base_spring_boot.controller;
 import com.ra.base_spring_boot.dto.ResponseWrapper;
-import com.ra.base_spring_boot.dto.resp.StatisticBusCompany;
-import com.ra.base_spring_boot.dto.resp.StatisticPaymentProviderResponse;
-import com.ra.base_spring_boot.dto.resp.StatisticStationResponse;
-import com.ra.base_spring_boot.dto.resp.StatisticTicketActiveResponse;
-import com.ra.base_spring_boot.services.IBusCompanyService;
-import com.ra.base_spring_boot.services.IPaymentService;
-import com.ra.base_spring_boot.services.IStationService;
-import com.ra.base_spring_boot.services.ITicketService;
-import com.ra.base_spring_boot.dto.resp.RevenueStatisticsResponse;
-import com.ra.base_spring_boot.dto.resp.StatisticsLoyalCustomerResponse;
-import com.ra.base_spring_boot.dto.resp.StatisticsNewCustomerResponse;
-import com.ra.base_spring_boot.services.IStatisticsService;
+import com.ra.base_spring_boot.dto.resp.*;
+import com.ra.base_spring_boot.services.*;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -36,6 +28,7 @@ public class AdminStatisticsController {
     private final IPaymentService paymentService;
     private final IStationService stationService;
     private final IStatisticsService statisticsService;
+    private final IExportExcelService iExportExcelService;
 
     @GetMapping("/revenue-by-month")
     @Operation(summary = "revenue by month", description = "statistics revenue by month with route id and bus company name")
@@ -128,6 +121,7 @@ public class AdminStatisticsController {
         );
     }
 
+
     @GetMapping("/statisticTicketActive")
     public ResponseEntity<?> getStatisticTicketActive(){
         StatisticTicketActiveResponse statisticTicketActive = ticketService.getTicketActive();
@@ -139,6 +133,7 @@ public class AdminStatisticsController {
                         .build()
         );
     }
+
 
     @GetMapping("/statisticPaymentProvider")
     public ResponseEntity<?> getStatisticPaymentProvider(){
@@ -163,4 +158,249 @@ public class AdminStatisticsController {
                         .build()
         );
     }
+
+    // file excel
+    @GetMapping("/revenue-by-date/excel")
+    public ResponseEntity<byte[]> exportRevenueByDateExcel(
+            @RequestParam Integer routeId,
+            @RequestParam String busCompanyName,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate
+    ) throws IOException {
+        RevenueStatisticsResponse response =
+                statisticsService.getRevenueStatisticsForDate(routeId, busCompanyName, startDate, endDate);
+
+        String[] headers = {
+                "Route ID",
+                "Bus company",
+                "Seat type",
+                "Price",
+                "Payment date",
+                "Payment method"
+        };
+        List<Object[]> rows = new ArrayList<>();
+
+        for (RevenueDetailResponse d : response.getDetails()) {
+            rows.add(new Object[]{
+                    d.getRouteId(),
+                    d.getBusCompanyName(),
+                    d.getSeatType(),
+                    d.getAmount(),
+                    d.getPaymentDate(),
+                    d.getPaymentMethod()
+            });
+        }
+        byte[] excel = iExportExcelService.exportExcel("RevenueByDate", headers, rows);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=revenue_by_date.xlsx")
+                .body(excel);
+    }
+
+    @GetMapping("/revenue-by-month/excel")
+    public ResponseEntity<byte[]> exportRevenueByMonthExcel(
+            @RequestParam Integer routeId,
+            @RequestParam String busCompanyName,
+            @RequestParam Integer month,
+            @RequestParam Integer year
+    ) throws IOException {
+
+        RevenueStatisticsResponse response =
+                statisticsService.getRevenueStatisticsByRouteAndBusCompanyForMonth(routeId, busCompanyName, month, year);
+
+        String[] headers = {
+                "Route ID",
+                "Bus company",
+                "Seat type",
+                "Price",
+                "Payment date",
+                "Payment method"
+        };
+
+        List<Object[]> rows = new ArrayList<>();
+
+        for (RevenueDetailResponse d : response.getDetails()) {
+            rows.add(new Object[]{
+                    d.getRouteId(),
+                    d.getBusCompanyName(),
+                    d.getSeatType(),
+                    d.getAmount(),
+                    d.getPaymentDate(),
+                    d.getPaymentMethod()
+            });
+        }
+        byte[] excel = iExportExcelService.exportExcel("RevenueByMonth", headers, rows);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=revenue_by_month.xlsx")
+                .body(excel);
+    }
+
+    @GetMapping("/revenue-by-year/excel")
+    public ResponseEntity<byte[]> exportRevenueByYearExcel(
+            @RequestParam Integer routeId,
+            @RequestParam String busCompanyName,
+            @RequestParam Integer year
+    ) throws IOException {
+
+        RevenueStatisticsResponse response =
+                statisticsService.getRevenueStatisticsByRouteAndBusCompanyForYear(routeId, busCompanyName, year);
+
+        String[] headers = {
+                "Route ID",
+                "Bus company",
+                "Seat type",
+                "Price",
+                "Payment date",
+                "Payment method"
+        };
+        List<Object[]> rows = new ArrayList<>();
+
+        for (RevenueDetailResponse d : response.getDetails()) {
+            rows.add(new Object[]{
+                    d.getRouteId(),
+                    d.getBusCompanyName(),
+                    d.getSeatType(),
+                    d.getAmount(),
+                    d.getPaymentDate(),
+                    d.getPaymentMethod()
+            });
+        }
+        byte[] excel = iExportExcelService.exportExcel("RevenueByYear", headers, rows);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=revenue_by_year.xlsx")
+                .body(excel);
+    }
+
+    @GetMapping("/new-customers/excel")
+    public ResponseEntity<byte[]> exportNewCustomersExcel() throws IOException {
+
+        StatisticsNewCustomerResponse response = statisticsService.getNewCustomerStatistics();
+
+        String[] headers = {"Email khách hàng", "Tổng số vé đã đặt"};
+
+        List<Object[]> rows = new ArrayList<>();
+        for (StatisticsNewCustomerResponse.CustomerInfoDTO c : response.getNewCustomers()) {
+            rows.add(new Object[]{
+                    c.getEmail(),
+                    c.getTotalTickets()
+            });
+        }
+        byte[] excel = iExportExcelService.exportExcel("NewCustomers", headers, rows);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=new_customers.xlsx")
+                .body(excel);
+    }
+
+    @GetMapping("/loyal-customers/excel")
+    public ResponseEntity<byte[]> exportLoyalCustomersExcel() throws IOException {
+
+        StatisticsLoyalCustomerResponse response = statisticsService.getLoyalCustomerStatistics();
+
+        String[] headers = {"Email khách hàng", "Tổng số vé đã đặt"};
+
+        List<Object[]> rows = new ArrayList<>();
+        for (StatisticsLoyalCustomerResponse.CustomerInfoDTO c : response.getLoyalCustomers()) {
+            rows.add(new Object[]{
+                    c.getEmail(),
+                    c.getTotalTickets()
+            });
+        }
+        byte[] excel = iExportExcelService.exportExcel("LoyalCustomers", headers, rows);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=loyal_customers.xlsx")
+                .body(excel);
+    }
+
+    @GetMapping("/statisticBusCompany/excel")
+    public ResponseEntity<byte[]> exportStatisticBusCompanyExcel(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) throws IOException {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<StatisticBusCompany> statisticPage = busCompanyService.getStatisticBusCompany(pageable);
+
+        String[] headers = {"ID Nhà xe", "Tên nhà xe", "Tổng chuyến", "Tổng doanh thu"};
+
+        List<Object[]> rows = statisticPage.getContent().stream()
+                .map(item -> new Object[]{
+                        item.getCompanyId(),
+                        item.getCompanyName(),
+                        item.getPositive(),
+                        item.getNegative(),
+                })
+                .toList();
+
+        byte[] excel = iExportExcelService.exportExcel("StatisticBusCompany", headers, rows);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=statistic_bus_company.xlsx")
+                .body(excel);
+    }
+
+    @GetMapping("/statisticTicketActive/excel")
+    public ResponseEntity<byte[]> exportStatisticTicketActiveExcel() throws IOException {
+
+        StatisticTicketActiveResponse data = ticketService.getTicketActive();
+
+        String[] headers = {"Vé đang hoạt động", "Vé đã hủy"};
+
+        List<Object[]> rows = new java.util.ArrayList<>();
+        rows.add(new Object[]{
+                data.getBooked(),
+                data.getCancelled()
+        });
+        byte[] excel = iExportExcelService.exportExcel("TicketActive", headers, rows);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=ticket_active_statistics.xlsx")
+                .body(excel);
+    }
+
+
+    @GetMapping("/statisticPaymentProvider/excel")
+    public ResponseEntity<byte[]> exportStatisticPaymentProviderExcel() throws IOException {
+        List<StatisticPaymentProviderResponse> list = paymentService.statisticByPaymentProvider();
+        String[] headers = {"Phương thức thanh toán", "Số lượng giao dịch", "Tổng doanh thu"};
+
+        // 2. Build rows -> luôn dùng ArrayList để tránh lỗi type inference
+        List<Object[]> rows = new java.util.ArrayList<>();
+        for (StatisticPaymentProviderResponse item : list) {
+            rows.add(new Object[]{
+                    item.getProviderName(),
+                    item.getTotalTransactions(),
+                    item.getTotalAmount(),
+            });
+        }
+        byte[] excel = iExportExcelService.exportExcel("PaymentProviderStats", headers, rows);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=payment_provider_statistics.xlsx")
+                .body(excel);
+    }
+    @GetMapping("/statisticStation/excel")
+    public ResponseEntity<byte[]> exportStatisticStationExcel() throws IOException {
+
+        List<StatisticStationResponse> list = stationService.getStatisticStations();
+
+        String[] headers = {"Tên bến xe", "Lượt xe xuất phát", "Lượt xe đến"};
+
+        List<Object[]> rows = new java.util.ArrayList<>();
+
+        for (StatisticStationResponse item : list) {
+            rows.add(new Object[]{
+                    item.getStationName(),
+                    item.getTotalPassengers()
+            });
+        }
+
+        byte[] excel = iExportExcelService.exportExcel("StationStatistic", headers, rows);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=station_statistics.xlsx")
+                .body(excel);
+    }
+
+
+
 }
