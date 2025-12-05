@@ -186,6 +186,7 @@ public class ScheduleServiceImpl implements IScheduleService {
                     .seatNumber(seat.getSeatNumber())
                     .price(schedule.getRoute().getPrice() + seat.getPriceForSeatType())
                     .status(isBooked ? SeatStatus.BOOKED : SeatStatus.AVAILABLE)
+                    .seatType(seat.getSeatType())
                     .build();
         }).collect(Collectors.toList());
     }

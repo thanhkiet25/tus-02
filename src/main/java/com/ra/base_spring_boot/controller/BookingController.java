@@ -9,6 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,13 +59,15 @@ public class BookingController {
     @Operation(summary = "Get booking history", description = "Get history with optional filters")
     public ResponseEntity<?> getHistory(
             @RequestParam(required = false) TicketStatus status,
-            @RequestParam(required = false) String companyName
+            @RequestParam(required = false) String companyName,
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+            Pageable pageable
     ) {
         return ResponseEntity.ok(
                 ResponseWrapper.builder()
                         .status(HttpStatus.OK)
                         .code(200)
-                        .data(bookingService.getHistory(status, companyName))
+                        .data(bookingService.getHistory(status, companyName, pageable))
                         .build()
         );
     }

@@ -2,6 +2,7 @@ package com.ra.base_spring_boot.dto.resp;
 
 import com.ra.base_spring_boot.model.Ticket;
 import com.ra.base_spring_boot.model.constants.PaymentStatus;
+import com.ra.base_spring_boot.model.constants.SeatType;
 import com.ra.base_spring_boot.model.constants.TicketStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,10 +16,12 @@ import java.time.LocalDateTime;
 @Builder
 public class BookingHistoryResponse {
     private Integer ticketId;
+    private Integer paymentId;
     private String routeName;
     private String busCompanyName;
     private String busNumber;
     private String seatNumber;
+    private SeatType seatType;
     private LocalDateTime departureTime;
     private Double price;
     private TicketStatus ticketStatus;
@@ -48,8 +51,14 @@ public class BookingHistoryResponse {
         this.price = ticket.getPrice();
         this.ticketStatus = ticket.getStatus();
 
+        if (ticket.getSeat() != null) {
+            this.seatNumber = ticket.getSeat().getSeatNumber();
+            this.seatType = ticket.getSeat().getSeatType();
+        }
+
         if (ticket.getPayment() != null) {
             this.paymentStatus = ticket.getPayment().getStatus();
+            this.paymentId = ticket.getPayment().getId();
         }
 
         this.bookingDate = ticket.getCreatedAt();
