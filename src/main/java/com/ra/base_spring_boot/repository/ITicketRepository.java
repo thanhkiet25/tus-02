@@ -55,10 +55,12 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
     @Query("""
                 SELECT new com.ra.base_spring_boot.dto.resp.BookingHistoryResponse(
                     t.id,
+                    p.id,
                     CONCAT(r.departureStation.name, ' - ', r.arrivalStation.name),
                     bc.companyName,
                     b.licensePlate,
                     s.seatNumber,
+                    t.seat.seatType,
                     sch.departureTime,
                     t.price,
                     t.status,
@@ -77,12 +79,22 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
                 AND (:companyName IS NULL OR bc.companyName LIKE CONCAT('%', :companyName, '%'))
                 ORDER BY t.createdAt DESC
             """)
-    List<BookingHistoryResponse> findHistory(
+    Page<BookingHistoryResponse> findHistory(
             @Param("userId") Integer userId,
             @Param("status") TicketStatus status,
-            @Param("companyName") String companyName
+            @Param("companyName") String companyName,
+            Pageable pageable
     );
-// lấy danh sách vé theo ngay
+
+    // Tìm các vé Pending mà quá hạn
+    @Query("SELECT t FROM Ticket t JOIN t.payment p " +
+            "WHERE t.status = 'BOOKED' " +
+            "AND p.status = 'PENDING' " +
+            "AND t.createdAt <= :thresholdTime")
+    List<Ticket> findExpiredTickets(@Param("thresholdTime") LocalDateTime thresholdTime);
+
+
+    // lấy danh sách vé theo ngay
     @Query("SELECT t FROM Ticket t WHERE t.schedule.route.id = :routeId " +
             " AND t.schedule.bus.busCompany.companyName like :busCompanyName " +
             "AND t.status = 'BOOKED' AND t.payment.status = 'COMPLETED' " +
@@ -91,7 +103,7 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
                                                        @Param("busCompanyName") String busCompanyName,
                                                        @Param("startDate") LocalDateTime startDate,
                                                        @Param("endDate") LocalDateTime endDate);
-// lấy danh sách vé theo tháng
+    // lấy danh sách vé theo tháng
     @Query("SELECT t FROM Ticket t WHERE t.schedule.route.id = :routeId " +
             " AND t.schedule.bus.busCompany.companyName like :busCompanyName " +
             "AND t.status = 'BOOKED' AND t.payment.status = 'COMPLETED' " +
@@ -102,7 +114,7 @@ public interface ITicketRepository extends JpaRepository<Ticket, Integer> {
                                                         @Param("year") int year);
 
 
-// lấy danh sách vé theo năm
+    // lấy danh sách vé theo năm
     @Query("SELECT t FROM Ticket t WHERE t.schedule.route.id = :routeId " +
             " AND t.schedule.bus.busCompany.companyName like :busCompanyName " +
             "AND t.status = 'BOOKED' AND t.payment.status = 'COMPLETED' " +

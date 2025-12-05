@@ -34,4 +34,13 @@ jwt:
   expired:
     access: 900000          # 15 phút
     refresh: 604800000    #7ngay
-#    access: 864000
+    #    access: 864000
+
+
+vnpay:
+  tmn-code: "T44QSQOI"
+  hash-secret: "86XKMB47FEL10A6KFB9VPXFR0BB3C5QD"
+  url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  return-url: "https://trenton-radiotoxic-nonprotrusively.ngrok-free.dev/api/v1/payment/vnpay-return"
+
+

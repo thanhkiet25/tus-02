@@ -13,6 +13,8 @@ import com.ra.base_spring_boot.repository.*;
 import com.ra.base_spring_boot.security.principle.MyUserDetails;
 import com.ra.base_spring_boot.services.IBookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,6 +114,16 @@ public class BookingServiceImpl implements IBookingService {
             throw new HttpBadRequest("Ticket is already cancelled");
         }
 
+        Payment payment = ticket.getPayment();
+        if (payment != null) {
+            if (payment.getStatus() == PaymentStatus.COMPLETED) {
+                payment.setStatus(PaymentStatus.REFUND_NEEDED);
+            } else if (payment.getStatus() == PaymentStatus.PENDING) {
+                payment.setStatus(PaymentStatus.FAILED);
+            }
+            paymentRepository.save(payment);
+        }
+
         ticket.setStatus(TicketStatus.CANCELLED);
 
         Ticket savedTicket = ticketRepository.save(ticket);
@@ -123,12 +135,12 @@ public class BookingServiceImpl implements IBookingService {
         return new BookingHistoryResponse(savedTicket);}
 
     @Override
-    public List<BookingHistoryResponse> getHistory(TicketStatus status, String companyName) {
+    public Page<BookingHistoryResponse> getHistory(TicketStatus status, String companyName, Pageable pageable) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
         if (companyName != null) {
             companyName = companyName.trim();
         }
-        return ticketRepository.findHistory(user.getId(), status, companyName);
+        return ticketRepository.findHistory(user.getId(), status, companyName, pageable);
     }
 }

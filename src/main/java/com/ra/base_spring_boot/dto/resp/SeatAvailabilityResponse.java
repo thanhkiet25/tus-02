@@ -1,6 +1,7 @@
 package com.ra.base_spring_boot.dto.resp;
 
 import com.ra.base_spring_boot.model.constants.SeatStatus;
+import com.ra.base_spring_boot.model.constants.SeatType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class SeatAvailabilityResponse {
     private String seatNumber;
     private Double price;
     private SeatStatus status;
+    private SeatType seatType;
 }
