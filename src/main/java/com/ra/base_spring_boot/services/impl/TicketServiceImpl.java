@@ -20,8 +20,7 @@ public class TicketServiceImpl implements ITicketService {
     @Override
     public TicketResponse searchTicket(Integer id, String phone) {
         Ticket ticket = ticketRepository.searchTicket(id, phone)
-                .orElseThrow(() -> new HttpNotFound("Ticket not found. " ));
-
+                .orElseThrow(() -> new HttpNotFound("Ticket not found with id: "+ id ));
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .departureTime(ticket.getDepartureTime())

@@ -14,4 +14,5 @@ public interface IBannerService {
     Page<BannerResponse> getAllBanner(String keyword, Pageable pageable);
     BannerResponse createBanner(BannerRequest request);
     void deleteBanner(Integer id);
+    BannerResponse getBannerById(Integer id);
 }

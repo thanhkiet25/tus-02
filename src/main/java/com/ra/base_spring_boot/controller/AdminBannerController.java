@@ -56,4 +56,16 @@ public class AdminBannerController {
                 .build(),
                 HttpStatus.OK);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseWrapper<?>> getBannerById(@PathVariable Integer id) {
+        BannerResponse bannerRes = bannerService.getBannerById(id);
+        return new ResponseEntity<>(ResponseWrapper
+                .builder()
+                .status(HttpStatus.OK)
+                .code(HttpStatus.OK.value())
+                .data(bannerRes)
+                .build(),
+                HttpStatus.OK);
+
+    }
 }

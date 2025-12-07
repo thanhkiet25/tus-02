@@ -66,7 +66,7 @@ public class JwtTokenFilter extends OncePerRequestFilter
                     return;
                 }
                 //refresh token
-               boolean isRefreshEndpoint = request.getRequestURI().equals("/api/v1/refresh/");
+               boolean isRefreshEndpoint = request.getRequestURI().equals("/api/v1/auth/refresh/");
                 if (!isAuthEndpoint && !isRefreshEndpoint) {
                     Date expiration = jwtProvider.extractExpiration(token);
                     if (expiration.before(new Date())) {
