@@ -19,7 +19,7 @@ public class BusReviewController {
     private final IBusReviewService busReviewService;
 
     @GetMapping
-    public ResponseEntity<?> findAllBusReviews(@PageableDefault(page = 0, size = 10, sort = "rating",direction = Sort.Direction.DESC) Pageable pageable,
+    public ResponseEntity<?> findAllBusReviews(@PageableDefault(page = 0, size = 10, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable,
                                                @RequestParam(required = false) Integer rating){
         return new ResponseEntity<>(ResponseWrapper.builder()
                 .status(HttpStatus.OK)

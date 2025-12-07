@@ -67,8 +67,8 @@ public class BusReviewServiceImpl implements IBusReviewService {
         if (rating == null) {
             throw new HttpBadRequest("Rating không được để trống");
         }
-        if (rating > 10) {
-            throw new HttpBadRequest("Rating max is 10");
+        if (rating > 5) {
+            throw new HttpBadRequest("Rating max is 5");
         }
         if (rating < 0) {
             throw new HttpBadRequest("Rating min is 0");
