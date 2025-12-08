@@ -20,9 +20,10 @@ public class PaymentProviderServiceImpl implements IPaymentProviderService {
 
     @Override
     public Page<PaymentProviderListResponse> findAllByPaymentProviderAndSearchByProviderName(String searchProviderName, Pageable pageable) {
-        Page<PaymentProvider> listProvider = paymentProviderRepository.findAllPaymentProviderByProviderNameContainingIgnoreCase(searchProviderName, pageable);
+        String trimmedProviderName = searchProviderName.trim();
+        Page<PaymentProvider> listProvider = paymentProviderRepository.findAllPaymentProviderByProviderNameContainingIgnoreCase(trimmedProviderName, pageable);
         if (listProvider == null ) {
-            throw new RuntimeException("ListProvider is empty!");
+            throw new HttpNotFound("ListProvider is empty!");
         }
         return listProvider.map(PaymentProviderListResponse::new);
     }

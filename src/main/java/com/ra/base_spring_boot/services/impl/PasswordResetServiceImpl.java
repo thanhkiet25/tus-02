@@ -1,5 +1,6 @@
 package com.ra.base_spring_boot.services.impl;
 
+import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.PasswordResetToken;
 import com.ra.base_spring_boot.model.User;
 import com.ra.base_spring_boot.repository.IPasswordResetRepository;
@@ -27,19 +28,28 @@ public class PasswordResetServiceImpl implements IPasswordResetService {
     @Override
     public void requestPasswordReset(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Email không tồn tại"));
+                .orElseThrow(() -> new HttpNotFound("Email is not exist!"));
 
-        String token = UUID.randomUUID().toString();
+        PasswordResetToken existingToken = passwordResetRepository.findByUser(user).orElse(null);
 
-        PasswordResetToken resetToken = new PasswordResetToken();
-        resetToken.setUser(user);
-        resetToken.setToken(token);
-        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+        String token = UUID.randomUUID().toString(); // tạo token mới
 
-        passwordResetRepository.save(resetToken);
+        if (existingToken != null) {
+            // update token cũ
+            existingToken.setToken(token);
+            existingToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+            passwordResetRepository.save(existingToken);
+        } else {
+            // tạo token lần đầu
+            PasswordResetToken resetToken = new PasswordResetToken();
+            resetToken.setUser(user);
+            resetToken.setToken(token);
+            resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+            passwordResetRepository.save(resetToken);
+        }
 
-        String link = "http://localhost:8080/api/password/reset?token=" + token;
-        sendMail(email, "Reset Password", "Nhấn link để đổi mật khẩu: \n" + link);
+            String link = "http://localhost:8080/api/password/reset?token=" + token;
+            sendMail(email, "Reset Password", "Nhấn link để đổi mật khẩu: \n" + link);
 
     }
 

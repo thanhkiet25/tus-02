@@ -95,7 +95,7 @@ public class StatisticsServiceImpl implements IStatisticsService {
             throw new HttpNotFound("routeId not found");
         }
         if (!routeRepository.existsRouteInBusCompanyName(routeId, trimmedBusCompanyName)) {
-            throw new HttpConflict("Bus company name not exists route ID");
+            throw new HttpConflict("Bus company name "+trimmedBusCompanyName+" is not exists route ID is "+routeId);
         }
         BusCompany busCompany = busCompanyRepository.findByCompanyName(trimmedBusCompanyName);
         LocalDateTime createdAt = busCompany.getCreatedAt();

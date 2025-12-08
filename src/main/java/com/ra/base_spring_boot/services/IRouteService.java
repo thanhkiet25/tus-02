@@ -14,7 +14,7 @@ import java.util.List;
 public interface IRouteService {
 
 
- Page<RouteListResponse> getAllRoute(Pageable pageable);
+ Page<RouteListResponse> getAllRouteAndSearchStation(Pageable pageable, String searchStation);
 
 
  RouteResponse findById(int id);
