@@ -2,6 +2,7 @@ package com.ra.base_spring_boot.advice;
 
 import com.ra.base_spring_boot.exception.*;
 import com.ra.base_spring_boot.dto.ResponseWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalHandleException
 {
@@ -179,6 +181,18 @@ public class GlobalHandleException
                         .status(HttpStatus.BAD_REQUEST)
                         .code(HttpStatus.BAD_REQUEST.value())
                         .data(message)
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGlobalException(Exception ex) {
+        log.error("Internal Server Error: ", ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                ResponseWrapper.builder()
+                        .data("An internal error occurred. Please contact support.")
+                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .build()
         );
     }
