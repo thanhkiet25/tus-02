@@ -4,8 +4,11 @@ import com.ra.base_spring_boot.model.Schedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,6 +46,11 @@ public interface IScheduleRepository extends JpaRepository<Schedule,Integer> {
             @Param("toId") Long toId,
             @Param("date") LocalDate date
             );
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Schedule s SET s.availableSeat = s.availableSeat + 1 WHERE s.id = :scheduleId")
+    void incrementAvailableSeat(@Param("scheduleId") Integer scheduleId);
 
     Schedule findScheduleById(Integer id);
 

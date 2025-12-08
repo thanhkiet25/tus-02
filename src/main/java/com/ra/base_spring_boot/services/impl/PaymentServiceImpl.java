@@ -3,6 +3,7 @@ package com.ra.base_spring_boot.services.impl;
 import com.ra.base_spring_boot.config.VnPayConfig;
 import com.ra.base_spring_boot.dto.resp.StatisticPaymentProviderResponse;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
+import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.Payment;
 import com.ra.base_spring_boot.model.Ticket;
@@ -68,10 +69,16 @@ public class PaymentServiceImpl implements IPaymentService {
             throw new HttpBadRequest("Transaction already completed successfully.");
         }
 
+        long realAmount = payment.getAmount().longValue();
+
+        if (amount != realAmount) {
+            throw new HttpConflict("Invalid amount: The requested amount does not match the transaction amount.");
+        }
+
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-        long amountVal = amount * 100;
+        long amountVal = realAmount * 100;
         String vnp_TxnRef = String.valueOf(paymentId);
         String vnp_IpAddr = VnPayConfig.getIpAddress(request);
 
