@@ -16,7 +16,10 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface IRouteRepository extends JpaRepository<Route, Integer> {
-    Page<Route> findAll(Pageable pageable);
+
+    @Query("SELECT r FROM Route r WHERE r.departureStation.name like concat('%',:searchStation,'%') or r.arrivalStation.name like concat('%',:searchStation,'%')")
+    Page<Route> findAllBySearchStation(Pageable pageable,
+                                  @Param("searchStation") String searchStation);
 
     @Query("""
             select new com.ra.base_spring_boot.dto.resp.PopularRoutesResponse(

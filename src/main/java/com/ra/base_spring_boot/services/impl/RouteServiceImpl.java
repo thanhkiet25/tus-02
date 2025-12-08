@@ -25,8 +25,9 @@ public class RouteServiceImpl implements IRouteService {
     private final IRouteRepository routeRepository;
      private final IStationRepository stationRepository;
     @Override
-    public Page<RouteListResponse> getAllRoute(Pageable pageable) {
-        return routeRepository.findAll(pageable).map(RouteListResponse::new);
+    public Page<RouteListResponse> getAllRouteAndSearchStation(Pageable pageable, String searchStation) {
+        String trimmedSearchStation = searchStation.trim();
+        return routeRepository.findAllBySearchStation(pageable, trimmedSearchStation).map(RouteListResponse::new);
     }
     @Override
     public RouteResponse findById(int id) {

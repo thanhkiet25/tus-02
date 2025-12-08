@@ -23,6 +23,8 @@ public class PasswordResetToken {
 
         private LocalDateTime expiryDate;
 
+        private boolean used = false;
+
         @OneToOne
         private User user;
 
