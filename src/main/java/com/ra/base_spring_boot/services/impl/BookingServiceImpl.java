@@ -99,6 +99,7 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public BookingHistoryResponse cancelTicket(Integer ticketId) {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
@@ -128,9 +129,7 @@ public class BookingServiceImpl implements IBookingService {
 
         Ticket savedTicket = ticketRepository.save(ticket);
 
-        Schedule schedule = ticket.getSchedule();
-        schedule.setAvailableSeat(schedule.getAvailableSeat() + 1);
-        scheduleRepository.save(schedule);
+        scheduleRepository.incrementAvailableSeat(ticket.getSchedule().getId());
 
         return new BookingHistoryResponse(savedTicket);}
 
