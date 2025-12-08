@@ -24,4 +24,5 @@ select b from Banner b
 
     Page<Banner> getAllAndSearchBanner(@Param("keyword") String keyword, Pageable pageable);
     Optional<Banner> findById(int id);
+    boolean existsByPosition(String position);
 }
