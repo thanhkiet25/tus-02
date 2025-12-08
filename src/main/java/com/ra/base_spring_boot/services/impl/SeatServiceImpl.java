@@ -49,7 +49,7 @@ public class SeatServiceImpl implements ISeatService {
         Seat seat = new Seat();
         seat.setSeatNumber(seatRequest.getSeatNumber());
         seat.setSeatType(seatRequest.getSeatType());
-        seat.setStatus(seatRequest.getStatus());
+        seat.setStatus(SeatStatus.AVAILABLE);
         seat.setPriceForSeatType(seatRequest.getPriceForSeatType());
         Bus bus = busRepository.findById(seatRequest.getBusId()).orElseThrow(() -> new HttpNotFound("Not found bus id is" + seatRequest.getBusId()));
         seat.setBus(bus);

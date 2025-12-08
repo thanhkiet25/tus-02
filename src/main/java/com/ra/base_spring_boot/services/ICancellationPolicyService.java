@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ICancellationPolicyService {
-    Page<CancellationPolicyListResponse> getAllCancellationPolicyAndSearchByRoute (String search, Pageable pageable);
+    Page<CancellationPolicyListResponse> getAllCancellationPolicyAndSearchByRoute (String searchStation, Pageable pageable);
 
     CancellationPolicyResponse findById(Integer id);
 

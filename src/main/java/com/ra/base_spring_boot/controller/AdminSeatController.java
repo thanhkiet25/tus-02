@@ -29,6 +29,7 @@ public class AdminSeatController {
     private final IBusCompanyService busCompanyService;
 
     @GetMapping("/{bus_company_id}")
+    @Operation(summary = "get all seat by bus company id", description = "get all seat by bus company id")
     public ResponseEntity<?> getAllSeatByBusCompany(@PathVariable int bus_company_id, @PageableDefault(page = 0, size = 10,sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam (defaultValue = "")  String searchBusName) {
        Page<SeatListResponse> seatListResponse = seatService.findAllByBusCompany(bus_company_id, searchBusName, pageable);
        return new ResponseEntity<>(
@@ -41,6 +42,7 @@ public class AdminSeatController {
     }
 
     @PostMapping
+    @Operation(summary = "creat seat ", description = "create new seat")
     public ResponseEntity<?> createSeat(@Valid @RequestBody SeatRequest seatRequest){
         SeatResponse seatResponse =  seatService.createSeat(seatRequest);
         return new ResponseEntity<>(
@@ -53,6 +55,7 @@ public class AdminSeatController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "delete seat by Id", description = "delete seat by Id")
     public ResponseEntity<?> deleteSeat(@PathVariable int id){
         seatService.deleteSeat(id);
         return new ResponseEntity<>(
