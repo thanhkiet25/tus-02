@@ -29,6 +29,11 @@ public class BannerServiceImpl implements IBannerService {
 
     @Override
     public Page<BannerResponse> getAllBanner (String keyword, Pageable pageable) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            keyword = null;
+        }else {
+            keyword = keyword.trim().toLowerCase();
+        }
         return bannerRepository.getAllAndSearchBanner(keyword,pageable)
                 .map(BannerResponse::new);
     }
@@ -50,8 +55,20 @@ public class BannerServiceImpl implements IBannerService {
 
     @Override
     public void deleteBanner (Integer id){
-        Banner banner = bannerRepository.findById(id).orElseThrow(()-> new HttpNotFound("Banner not found with id:"+id));
+        Banner banner = bannerRepository.findById(id).orElseThrow(()-> new HttpNotFound("Banner not found with id: "+id));
        bannerRepository.deleteById(id);
+    }
+    @Override
+    public BannerResponse getBannerById (Integer id) {
+        Banner banner = bannerRepository.findById(id).orElseThrow(()-> new HttpNotFound("Banner not found with id: "+id));
+        return BannerResponse.builder()
+                .id(banner.getId())
+                .bannerUrl(banner.getBannerUrl())
+                .position(banner.getPosition())
+                .createdAt(banner.getCreatedAt())
+                .updatedAt(banner.getUpdatedAt())
+                .build();
+
     }
 
 }

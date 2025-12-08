@@ -3,6 +3,7 @@ package com.ra.base_spring_boot.controller;
 import com.ra.base_spring_boot.dto.ResponseWrapper;
 import com.ra.base_spring_boot.dto.req.FormLogin;
 import com.ra.base_spring_boot.dto.req.FormRegister;
+import com.ra.base_spring_boot.dto.req.RefreshTokenRequest;
 import com.ra.base_spring_boot.dto.resp.UserResponse;
 import com.ra.base_spring_boot.model.BlackListToken;
 import com.ra.base_spring_boot.repository.IBlackListToken;
@@ -88,15 +89,15 @@ public class AuthController
 
     //refresh token
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> req) {
-        String refreshToken = req.get("refreshToken");
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest req) {
+        String refreshToken = req.getRefreshToken();
 
         try {
             // Giải mã refresh token
             String username = jwtProvider.extractUsername(refreshToken);
 
             // Tạo access token mới
-            String newAccessToken = jwtProvider.generateToken(username);
+            String newAccessToken = jwtProvider.generateRefreshToken(username);
 
             return ResponseEntity.ok(
                     ResponseWrapper.builder()

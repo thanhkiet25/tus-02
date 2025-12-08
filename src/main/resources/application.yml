@@ -32,7 +32,7 @@ jwt:
   secret:
     key: Ascmkkqdnmsdfrtgsyuhidj21ue120938219321ndsad
   expired:
-    access: 900000          # 15 phút
+    access: 900000         # 15 phút
     refresh: 604800000    #7ngay
     #    access: 864000
 

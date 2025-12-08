@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IBannerRepository extends JpaRepository<Banner, Integer> {
     @Query("""
@@ -20,5 +21,7 @@ select b from Banner b
         WHERE (:keyword IS NULL OR LOWER(b.position) LIKE LOWER(CONCAT('%', :keyword, '%'))
                 OR LOWER(b.bannerUrl) LIKE LOWER(CONCAT('%', :keyword, '%')))
         """)
+
     Page<Banner> getAllAndSearchBanner(@Param("keyword") String keyword, Pageable pageable);
+    Optional<Banner> findById(int id);
 }
