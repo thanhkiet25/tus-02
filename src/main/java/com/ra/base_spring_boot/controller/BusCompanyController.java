@@ -24,8 +24,8 @@ public class BusCompanyController {
             @RequestParam(defaultValue = "0")int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        Pageable pageable = PageRequest.of(page, size);
-        Page<BusCompanyListResponse> result = busCompanyService.getCompanyNames(pageable);
+       
+        Page<BusCompanyListResponse> result = busCompanyService.getBusCompanies(page, size);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
                         .code(HttpStatus.OK.value())

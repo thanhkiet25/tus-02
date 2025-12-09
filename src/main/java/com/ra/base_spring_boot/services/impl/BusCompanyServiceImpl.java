@@ -27,11 +27,12 @@ public class BusCompanyServiceImpl implements IBusCompanyService {
     @Autowired
     private CloudinaryServiceImpl cloudinaryService;
 
-    public Page<BusCompanyListResponse> getCompanyNames(Pageable pageable) {
-        return busCompanyRepository.findAll(pageable).map(BusCompanyListResponse::new);
+    public Page<BusCompanyListResponse> getBusCompanies(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BusCompany> result = busCompanyRepository.findAll(pageable);
+
+        return result.map(BusCompanyListResponse::new);
     }
-
-
 
     public BusCompanyResponse getCompanyById(int id) {
         BusCompany company = busCompanyRepository.findById(id)

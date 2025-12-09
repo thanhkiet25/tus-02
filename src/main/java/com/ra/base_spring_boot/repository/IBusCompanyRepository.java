@@ -2,6 +2,7 @@ package com.ra.base_spring_boot.repository;
 
 import com.ra.base_spring_boot.dto.resp.PopularBusCompanyResponse;
 import com.ra.base_spring_boot.model.BusCompany;
+import com.ra.base_spring_boot.model.Route;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,5 +53,7 @@ order by count(t.id) desc
     Page<Object[]> getStatisticBusCompany(Pageable pageable);
 
     BusCompany findByCompanyName(String busCompanyName);
+
+
 
 }

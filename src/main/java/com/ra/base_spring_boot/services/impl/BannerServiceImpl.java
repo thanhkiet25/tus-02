@@ -4,6 +4,7 @@ import com.ra.base_spring_boot.converter.BannerConverter;
 import com.ra.base_spring_boot.dto.req.BannerRequest;
 import com.ra.base_spring_boot.dto.resp.BannerResponse;
 import com.ra.base_spring_boot.exception.HttpBadRequest;
+import com.ra.base_spring_boot.exception.HttpConflict;
 import com.ra.base_spring_boot.exception.HttpNotFound;
 import com.ra.base_spring_boot.model.Banner;
 import com.ra.base_spring_boot.repository.IBannerRepository;
@@ -39,6 +40,9 @@ public class BannerServiceImpl implements IBannerService {
     }
     @Override
     public BannerResponse createBanner (BannerRequest request) {
+        if (bannerRepository.existsByPosition(request.getPosition())) {
+            throw new HttpConflict("Position banner already exists!");
+        }
         try {
 
             String imageUrl = cloudinaryService.upload(request.getBannerUrl());

@@ -33,6 +33,7 @@ public class TicketServiceImpl implements ITicketService {
                 .seatType(ticket.getSeatType())
                 .price(ticket.getPrice())
                 .status(ticket.getStatus())
+                .paymentStatus(ticket.getPayment().getStatus())
                 .scheduleId(ticket.getSchedule().getId())
                 .seatId(ticket.getSeat().getId())
                 .createdAt(ticket.getCreatedAt())
