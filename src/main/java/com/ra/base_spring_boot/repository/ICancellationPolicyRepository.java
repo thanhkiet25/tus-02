@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -13,8 +14,9 @@ import org.springframework.stereotype.Repository;
 public interface ICancellationPolicyRepository extends JpaRepository<CancellationPolicy, Integer> {
     @Query("SELECT cp FROM CancellationPolicy cp " +
             "JOIN cp.route r " +
-            "WHERE r.departureStation.name LIKE CONCAT('%', :search, '%') " +
-            "OR r.arrivalStation.name LIKE CONCAT('%', :search, '%')")
-    Page<CancellationPolicy> getAllCancellationPolicyAndSearchByRoute(String search, Pageable pageable);
+            "WHERE r.departureStation.name LIKE CONCAT('%', :searchStation, '%') " +
+            "OR r.arrivalStation.name LIKE CONCAT('%', :searchStation, '%')")
+    Page<CancellationPolicy> getAllCancellationPolicyAndSearchByRoute(@Param("searchStation") String searchStation,
+                                                                      Pageable pageable);
 
 }

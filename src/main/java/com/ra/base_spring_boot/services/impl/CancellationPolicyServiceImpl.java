@@ -23,11 +23,11 @@ public class CancellationPolicyServiceImpl implements ICancellationPolicyService
     private final IRouteRepository routeRepository;
 
     @Override
-    public Page<CancellationPolicyListResponse> getAllCancellationPolicyAndSearchByRoute(String search, Pageable pageable) {
-        String trimmedSearch = (search != null) ? search.trim() : "";
+    public Page<CancellationPolicyListResponse> getAllCancellationPolicyAndSearchByRoute(String searchStation, Pageable pageable) {
+        String trimmedSearch = (searchStation != null) ? searchStation.trim() : "";
         Page<CancellationPolicy> list = cancellationPolicyRepository.getAllCancellationPolicyAndSearchByRoute(trimmedSearch, pageable);
         if (list.isEmpty()) {
-            throw new HttpNotFound("List cancellation policy with search is ["+search+"] CancellationPolicy is empty");
+            throw new HttpNotFound("List cancellation policy with search is ( "+searchStation+" ) is empty");
         }
         return list.map(CancellationPolicyListResponse::new);
     }

@@ -26,9 +26,9 @@ public class AdminCancellationPolicyController {
 
     @GetMapping
     @Operation(summary = "get all cancellation policy", description = "get all cancellation policy by search departureStation or arrivalStation")
-    public ResponseEntity<?> getAllCancellationPolicies(@PageableDefault(page = 0, size = 10)Pageable  pageable,
-                                                        @RequestParam (defaultValue = "") String search) {
-        Page<CancellationPolicyListResponse> listCancellation = cancellationPolicyService.getAllCancellationPolicyAndSearchByRoute(search, pageable);
+    public ResponseEntity<?> getAllCancellationPolicies(@PageableDefault(page = 0, size = 10,sort = "id", direction = Sort.Direction.ASC)Pageable  pageable,
+                                                        @RequestParam (defaultValue = "") String searchStation) {
+        Page<CancellationPolicyListResponse> listCancellation = cancellationPolicyService.getAllCancellationPolicyAndSearchByRoute(searchStation, pageable);
         return new ResponseEntity<>(
                 ResponseWrapper.builder()
                         .status(HttpStatus.OK)
